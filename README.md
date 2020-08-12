@@ -14,6 +14,8 @@ Pay Hub for decentralized web.
 
 
 ## Roadmap (draft)
+- [ ] Owner mode: Add currency(title, name/key, address); withdraw deposit( transfer to other addresses)
+- [ ] User mode: add address of some currency, set tooltip name; withdraw deposit( transfer to this address from payhub)
 - [ ] ETH support: web3.js
 - [ ] Bitcoin support
 
