@@ -1,5 +1,5 @@
 # payhub
-Pay Hub for decentralized web. Bring payment to every website without a payment center.
+Pay Hub for decentralized web. Bring payment to every website without redirecting to a payment center.
 
 
 ## Target
