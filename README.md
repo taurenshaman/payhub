@@ -13,27 +13,13 @@ Pay Hub for decentralized web. Bring payment to every website without redirectin
 - Pay with wallet plugins of you browser. So **No need to redirect to the payment platform**. #decentralized
 
 
-## Roadmap (v2020)
-- [ ] Creator mode: for owner/creator of the website
-   - [ ] Add currency with address: the address will contains all money including consumed and locked (users will consume in the future).
-      - consumed money: already blonged to the website owner/creator
-      - locked: users' balance
-   - [ ] withdraw deposit( transfer the consumed money to other addresses): platform -> the chain
-- [ ] User mode: for normal users
-   - [ ] add address of some currency, set tooltip name
-   - [ ] recharge: the chain -> platform
-   - [ ] withdraw deposit( transfer to this address from payhub): platform -> the chain
-   - [ ] transfer: flows in platform
-- [ ] ETH support: web3.js
-   - [ ] recharge
-   - [ ] withdraw deposit
-   - [ ] parse trasaction to restore the recharge action if the balance in PayHub didn't update.
-- [ ] Bitcoin support
-   - [ ] recharge
-   - [ ] withdraw deposit
-   - [ ] parse trasaction to restore the recharge action if the balance in PayHub didn't update.
+## [Roadmap v2020](https://github.com/taurenshaman/payhub/wiki/Roadmap.v2020)
 
-
-## Ready?
-- [ ] A simple roadmap
-- [ ] Create a DAO: molochdao || aragon
+## Donate
+* Bitcoin | BTC: 17KYrfoipSWsjDNDdDsovANvDdvyRWV2Kg
+* Ethereum | ETH: 0x309dDffb87f07AfBA6B69cFeD4BdfaEA774f6ABb
+---
+* [BuyMeACoffee](https://www.buymeacoffee.com/taurenshaman)
+   [![Buy Me A Coffee](https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png)](https://www.buymeacoffee.com/taurenshaman)
+* [Patreon](https://www.patreon.com/taurenshaman)
+* [爱发电](http://afdian.net/@taurenshaman)
