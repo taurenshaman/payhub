@@ -1,0 +1,68 @@
+﻿@model UserViewModel
+@{
+  List<PayHub.Models.WithdrawAccount> accounts = ViewBag.Accounts;
+}
+
+@if (ViewBag.Error != null) {
+    <h2 class="fg-red">@ViewBag.Error</h2>
+    return;
+}
+
+<div class="container grid">
+    <div class="row">
+        <div class="d-flex flex-justify-center w-100">
+            <div class="social-box" style="width: 400px;">
+                <div class="header bg-orange fg-white">
+                    <img id="avator" class="avatar bg-light" src="@Model.AvatarUri">
+                    <div class="title">@Model.Account.UserName</div>
+                    <div class="subtitle">@Model.Account.NickName</div>
+                </div>
+                <ul class="skills">
+                    <li>
+                        <div class="text-bold">Works</div>
+                        <div>9</div>
+                    </li>
+                    <li>
+                        <div class="text-bold">Patrons</div>
+                        <div>88</div>
+                    </li>
+                    <li>
+                        <div class="text-bold">Reward times</div>
+                        <div>666</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <hr class="w-100" />
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="d-flex flex-wrap w-100 h-100">
+            @foreach (var account in accounts) {
+                <div class="card" style="width: 260px;">
+                    <div class="card-header header">
+                        <span class="icon cc @account.TheCurrency.Unit"></span> @account.Name (@account.TheCurrency.Unit)
+                    </div>
+                    <div class="card-content p-2 text-center">
+                        <h2 class="text-center fg-gray">@account.TheCurrency.Name</h2>
+                        <textarea style="height: 120px;" readonly
+                                  data-role="textarea"
+                                  data-clear-button="false"
+                                  data-prepend="<span class='cc @account.TheCurrency.Unit'></span>">@account.Account</textarea>
+                    </div>
+                    <div class="card-footer">
+                        <button class="flat-button mif-copy info" title="Copy" onclick="vm.copyToClipboard('@account.Account');"></button>
+                        @*<span><span class="mif-coins"></span> @account.TheCurrency.Name</span>*@
+                        <button class="flat-button mif-upload success" title="Submit a transaction" onclick="vm.submitTransaction();"></button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    @*<script src="~/lib/d3/d3.v5.min.js"></script>*@
+}

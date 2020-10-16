@@ -1,0 +1,63 @@
+﻿@model PayHub.ViewModels.UserViewModel
+@{
+}
+
+<header data-role="appbar" data-expand-point="md" style="position: static;">
+    <a href="~/" class="brand no-hover order-1"><span class="mif-bitcoin mif-3x mr-3"></span> PayHub</a>
+    <ul class="app-bar-menu order-2 order-md-3">
+        @if (Model != null && Model.CurrentUser != null) {
+            @*<li>
+                <a href="~/manage/wallet"><span class="icon mif-command"></span> Wallet</a>
+            </li>*@
+            @*<li>
+                    <a class="dropdown-toggle"><span class="icon mif-pencil"></span> Write</a>
+                    <ul class="d-menu" data-role="dropdown">
+                        <li><a href="~/@Model.UserName/write/markdown"><span class="icon mif-news"></span> Markdown</a></li>
+                        <li><a href="~/@Model.UserName/write/blocks"><span class="icon mif-news"></span> Blocks style</a></li>
+                    </ul>
+                </li>*@
+        }
+    </ul>
+
+    <div class="app-bar-container ml-auto order-3 order-md-4">
+        @if (Model != null && Model.CurrentUser != null) {
+            <div class="app-bar-container">
+                <a class="app-bar-item" href="~/manage/wallet"><span class="icon mif-suitcase"></span> Manage Wallet</a>
+            </div>
+             @*<div class="app-bar-container">
+                <span class="app-bar-item text-center dropdown-toggle">
+                    <span class="icon mif-plus"> Account</span>
+                </span>
+                <ul class="d-menu place-right" data-role="dropdown">
+                    <li><a href="~/manage/add/btc"><span class="icon cc BTC"></span> Bitcoin</a></li>
+                    <li><a href="~/manage/add/eth"><span class="icon cc ETH"></span> ETH</a></li>
+                </ul>
+            </div>*@
+            <div class="app-bar-container float-left">
+                <span class="app-bar-item text-center dropdown-toggle">
+                    @if (string.IsNullOrWhiteSpace( Model.AvatarUri )) {
+                        <span class="icon mif-user fg-orange"></span>
+                    }
+                    else {
+                        <img class="icon" style="width: 32px; height: 32px;" src="@Model.AvatarUri" />
+                    }
+                    @Model.CurrentUser.NickName
+                </span>
+                <ul class="d-menu place-right" data-role="dropdown" style="max-width: 130px;">
+                    <li class="divider"></li>
+                    <li>
+                        <a href="~/@Model.CurrentUser.UserName"><span class="icon mif-profile fg-blue"></span> My Profile</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="~/account/logout"><span class="icon mif-exit fg-red"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else {
+            <a class="app-bar-item text-center bg-cyan fg-white" href="">Login</a>
+            <a class="app-bar-item text-center bg-green fg-white" href="?from=payhub.web">Register</a>
+        }
+    </div>
+</header>

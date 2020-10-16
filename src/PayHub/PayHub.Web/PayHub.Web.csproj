@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <OutputType>Exe</OutputType>
+    <StartupObject></StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Work\" />
+    <Folder Include="wwwroot\css\icons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PayHub.Core\PayHub.Core.csproj" />
+  </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,39 @@
+﻿@model UserViewModel
+@{
+}
+
+@if (ViewBag.Error != null) {
+    <h2 class="fg-red">@ViewBag.Error</h2>
+    return;
+}
+
+<div class="container grid">
+    <div class="d-flex flex-justify-center w-100">
+        <div class="social-box" style="width: 400px;">
+            <div class="header bg-orange fg-white">
+                <img id="avator" class="avatar bg-light" src="@Model.AvatarUri">
+                <div class="title">@Model.Account.UserName</div>
+                <div class="subtitle">@Model.Account.NickName</div>
+            </div>
+            <ul class="skills">
+                <li>
+                    <div class="text-bold">Works</div>
+                    <div>9</div>
+                </li>
+                <li>
+                    <div class="text-bold">Patrons</div>
+                    <div>88</div>
+                </li>
+                <li>
+                    <div class="text-bold">Reward times</div>
+                    <div>666</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    @*<script src="~/lib/d3/d3.v5.min.js"></script>*@
+}

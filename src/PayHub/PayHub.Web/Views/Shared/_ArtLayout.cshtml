@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PayHub</title>
+    <link rel="stylesheet" href="~/lib/metro4/css/metro-all.min.css?v=4.3.10" />
+    <link rel="stylesheet" href="~/css/icons/cryptocoins.css" />
+    @RenderSection( "Styles", required: false )
+</head>
+<body>
+    <partial name="_HeaderNavigation" model="@Model" />
+
+    <div class="container" style="min-height: 600px; z-index: 9;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="w-100 bg-light" style="z-index: 9; position: absolute; bottom: 0;">
+        <div class="container">
+            &copy; 2020 - PayHub - <a asp-area="" asp-controller="Default" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/jquery.min.js?v=3.5.1"></script>
+    <script src="~/lib/metro4/js/metro.min.js?v=4.3.10"></script>
+    @RenderSection( "Scripts", required: false )
+</body>
+</html>

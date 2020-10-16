@@ -1,0 +1,49 @@
+﻿@{
+  ViewData["Title"] = "Home Page";
+  Layout = "_ArtLayout";
+}
+
+@section Styles{
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background: black;
+        }
+
+       /* .connection-explanation p {
+            text-align: center;
+        }
+
+        .connection-type {
+            margin-top: 2em;
+            font-size: 1.3em;
+            color: #464646;
+        }
+
+        h1.connection-name {
+            margin-top: 0.5em;
+            text-align: center;
+        }
+
+        .connection-abstract {
+            color: rgb(140, 140, 140);
+            font-size: 1.3em;
+            font-style: italic;
+        }*/
+    </style>
+}
+
+<div class="text-center bg-light mt-5" style="z-index: 9;">
+    <h1>Welcome to PayHub</h1>
+    <p>PayHub for decentralized web. Bring payment to every website without a payment center.</p>
+    <p>Learn about <a href="https://github.com/taurenshaman/payhub">PayHub</a>.</p>
+</div>
+
+@section Scripts{
+    <script src="~/lib/d3/d3.v5.min.js"></script>
+    <script src="~/js/connected-particles.js" asp-append-version="true"></script>
+}
