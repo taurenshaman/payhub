@@ -1,14 +1,17 @@
 ﻿@model UserViewModel
 @{
-  List<PayHub.Models.WithdrawAccount> accounts = ViewBag.Accounts;
+    List<PayHub.Models.WithdrawAccount> accounts = ViewBag.Accounts;
 }
 
 @if (ViewBag.Error != null) {
     <h2 class="fg-red">@ViewBag.Error</h2>
     return;
 }
+@section HeadMeta{
+    <meta name="metro4:init" content="false">
+}
 
-<div class="container grid">
+<div id="app" class="container grid">
     <div class="row">
         <div class="d-flex flex-justify-center w-100">
             <div class="social-box" style="width: 400px;">
@@ -38,31 +41,63 @@
         <hr class="w-100" />
     </div>
     <div class="row mt-3 mb-3">
-        <div class="d-flex flex-wrap w-100 h-100">
-            @foreach (var account in accounts) {
-                <div class="card" style="width: 260px;">
-                    <div class="card-header header">
-                        <span class="icon cc @account.TheCurrency.Unit"></span> @account.Name (@account.TheCurrency.Unit)
-                    </div>
-                    <div class="card-content p-2 text-center">
-                        <h2 class="text-center fg-gray">@account.TheCurrency.Name</h2>
-                        <textarea style="height: 120px;" readonly
-                                  data-role="textarea"
-                                  data-clear-button="false"
-                                  data-prepend="<span class='cc @account.TheCurrency.Unit'></span>">@account.Account</textarea>
-                    </div>
-                    <div class="card-footer">
-                        <button class="flat-button mif-copy info" title="Copy" onclick="vm.copyToClipboard('@account.Account');"></button>
-                        @*<span><span class="mif-coins"></span> @account.TheCurrency.Name</span>*@
-                        <button class="flat-button mif-upload success" title="Submit a transaction" onclick="vm.submitTransaction();"></button>
+        <div class="d-flex flex-justify-center flex-wrap w-100 h-100">
+            <div v-for="(item, index) in accounts" :key="item.uri" :id="'card_' + index"
+                 class="flip-card effect-on-active"
+                 style="width: 300px; height: 380px;">
+                <div class="front">
+                    <div class="card">
+                        <div class="card-header header">
+                            <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                        </div>
+                        <div class="card-content p-2 text-center">
+                            <h2 class="text-center fg-gray">{{item.name}}</h2>
+                            <textarea :id="'taAccount_' + index" style="height: 148px;" readonly
+                                      data-role="textarea"
+                                      data-clear-button="false"
+                                      data-auto-size="false"
+                                      v-bind:data-prepend="item.iconInfo" v-on:focus="copyAccount(index)">{{item.account}}</textarea>
+                        </div>
+                        <div class="card-footer">
+                            <button class="flat-button mif-copy info" title="Copy" v-on:click="copyAccount(index)"></button>
+                            <button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button>
+                            <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                        </div>
                     </div>
                 </div>
-            }
+                <div class="back">
+                    <div class="card">
+                        <div class="card-header header">
+                            <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                        </div>
+                        <div class="card-content d-flex p-2 flex-justify-center flex-align-center">
+                            <div :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
+                            </div>
+                        </div>
+                        <div class="card-footer flex-justify-center">
+                            <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
 </div>
 
 @section Scripts{
-    @*<script src="~/lib/d3/d3.v5.min.js"></script>*@
+    <script type="text/javascript" src="~/lib/3rd/lodash.min.js?v=1.8.3"></script>
+    <script type="text/javascript" src="~/lib/3rd/qrcode.min.js"></script>
+    <script type="text/javascript" src="~/lib/vue/vue.min.js?v=2.6.11"></script>
+    <script type="text/javascript" src="~/js/payhub.min.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        //ViewModelBridge.initialize("@ViewBag.CompatibleLanguageCode", null);
+        var vm = new AccountViewModel();
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        vm.init();
+    });
+
+    </script>
 }

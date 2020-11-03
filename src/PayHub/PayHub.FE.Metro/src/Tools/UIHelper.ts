@@ -1,22 +1,29 @@
 ﻿"use strict";
 
 class UIHelper {
+    //public static charmId: string = "charm";
+    //public static editAreaIdInCharm: string = "divEditArea";
 
     public static ShowCharm(id) {
+        //var charm = $("#" + id).data("charms");
+        //charm.open();
         Metro.charms.open("#" + id);
     }
 
     public static HideCharm(id) {
+        //var charm = $("#" + id).data("charms");
+        //charm.close();
         Metro.charms.close("#" + id);
     }
 
     public static HideCharms(ids) {
         _.forEach(ids, id => {
+            //UIHelper.HideCharm(id);
             Metro.charms.close("#" + id);
         });
     }
 
-    public static ShowOrHideCharm(id, canClose) {
+    public static ToggleCharm(id) {
         Metro.charms.toggle("#" + id);
     }
 
@@ -92,53 +99,15 @@ class UIHelper {
         window.history.back();
     }
 
-    public static getIcon(noteType: string): string {
-        let icon = "mif-embed2";
-        // switch (noteType) {
-        //     case ModelData.Type_Document:
-        //         icon = 'mif-file-code';
-        //         break;
-        //     case ModelData.Type_Mind:
-        //         icon = 'mif-share';
-        //         break;
-        //     case ModelData.Type_Section:
-        //         icon = 'mif-book-reference';
-        //         break;
-        //     case ModelData.Type_Dialog:
-        //         icon = 'mif-chat-bubble-outline';
-        //         break;
-        //     case ModelData.Type_XY:
-        //         icon = 'mif-windows';
-        //         break;
-        //     case ModelData.Type_5W2H1E:
-        //         icon = 'mif-dashboard';
-        //         break;
-        //     case ModelData.Type_BusinessModelCanvas:
-        //         icon = 'mif-dashboard';
-        //         break;
-        //     case ModelData.Type_OsborneCheckList:
-        //         icon = 'mif-dashboard';
-        //         break;
-
-        //     case ModelData.Type_Topic:
-        //         icon = 'mif-folder-special2';
-        //         break;
-        //     case ModelData.Type_LanguagePack:
-        //         icon = 'mif-language';
-        //         break;
-        //     case ModelData.ItemType_vocabulary:
-        //         icon = 'mif-language';
-        //         break;
-
-        //     case ModelData.Type_SingleChoicesSet:
-        //         icon = 'mif-done';
-        //         break;
-
-        //     default:
-        //         icon = 'mif-embed2';
-        //         break;
-        // }
-        return icon;
+    public static CreateQRCode(eleId, text, size=256) {
+        const qrContainer = document.getElementById(eleId);
+        if (qrContainer) {
+            const qrc = new QRCode(qrContainer, {
+                text: text,
+                width: size,
+                height: size
+            });
+        }
     }
 
 }
