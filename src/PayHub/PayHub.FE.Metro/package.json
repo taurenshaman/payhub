@@ -17,5 +17,7 @@
     "gulp-uglify": "^3.0.2",
     "typescript": "^3.9.7"
   },
-  "dependencies": {}
+  "dependencies": {
+    "yargs-parser": "^20.2.3"
+  }
 }
