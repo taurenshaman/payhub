@@ -64,6 +64,8 @@ class AccountViewModel extends ViewModelBase {
     afterMetroReady() {
         for (let i = 0; i < this.accounts.length; i++) {
             const account = this.accounts[i];
+			if(account.qrcode && account.qrcode.length > 4)
+					continue;
             UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
         }
     }

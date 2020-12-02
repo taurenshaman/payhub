@@ -50,16 +50,20 @@
                         <div class="card-header header">
                             <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
                         </div>
-                        <div class="card-content p-2 text-center">
+                        <div class="card-content p-2 text-center" style="height: 210px;">
                             <h2 class="text-center fg-gray">{{item.name}}</h2>
-                            <textarea :id="'taAccount_' + index" style="height: 148px;" readonly
+                            <textarea :id="'taAccount_' + index" style="height: 100px;" readonly
                                       data-role="textarea"
                                       data-clear-button="false"
                                       data-auto-size="false"
-                                      v-bind:data-prepend="item.iconInfo" v-on:focus="copyAccount(index)">{{item.account}}</textarea>
+                                      v-if="item.account && item.account.length > 0"
+                                      v-bind:data-prepend="item.iconInfo"
+                                      v-on:focus="copyAccount(index)">{{item.account}}</textarea>
                         </div>
                         <div class="card-footer">
-                            <button class="flat-button mif-copy info" title="Copy" v-on:click="copyAccount(index)"></button>
+                            <button class="flat-button mif-copy info" title="Copy"
+                                    v-if="item.account && item.account.length > 0"
+                                    v-on:click="copyAccount(index)"></button>
                             <button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button>
                             <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
                         </div>
@@ -71,7 +75,8 @@
                             <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
                         </div>
                         <div class="card-content d-flex p-2 flex-justify-center flex-align-center">
-                            <div :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
+                            <img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
+                            <div v-else :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
                             </div>
                         </div>
                         <div class="card-footer flex-justify-center">
