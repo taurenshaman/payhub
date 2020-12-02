@@ -15,6 +15,9 @@ Pay Hub for decentralized web. Bring payment to every website without redirectin
 
 ## [Roadmap v2020](https://github.com/taurenshaman/payhub/wiki/Roadmap.v2020)
 
+## for Static Websites
+Try [Single Html Pages](https://github.com/taurenshaman/payhub/tree/master/src/SinglePages) 🙂
+
 ## Donate
 * Bitcoin | BTC: 17KYrfoipSWsjDNDdDsovANvDdvyRWV2Kg
 * Ethereum | ETH: 0x309dDffb87f07AfBA6B69cFeD4BdfaEA774f6ABb
