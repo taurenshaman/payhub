@@ -1,9 +1,0 @@
-F:\Github\payhub\src\PayHub\PayHub.Core\bin\Debug\netcoreapp3.1\PayHub.Core.deps.json
-F:\Github\payhub\src\PayHub\PayHub.Core\bin\Debug\netcoreapp3.1\PayHub.Core.dll
-F:\Github\payhub\src\PayHub\PayHub.Core\bin\Debug\netcoreapp3.1\PayHub.Core.pdb
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.csprojAssemblyReference.cache
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.AssemblyInfoInputs.cache
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.AssemblyInfo.cs
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.csproj.CoreCompileInputs.cache
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.dll
-F:\Github\payhub\src\PayHub\PayHub.Core\obj\Debug\netcoreapp3.1\PayHub.Core.pdb

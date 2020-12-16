@@ -1,4 +1,4 @@
-﻿using PayHub.Core.Models;
+﻿using PayHub.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

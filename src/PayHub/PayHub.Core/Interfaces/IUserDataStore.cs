@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PayHub.Interfaces {
   /// <summary>
@@ -16,7 +17,13 @@ namespace PayHub.Interfaces {
     /// <returns></returns>
     AuthUser Authenticate(string account, string secret);
 
-    bool AddAccount(string currencyId, string accountName, string accountAddress);
+    /// <summary>
+    /// Get WithdrawAccounts of current user
+    /// </summary>
+    /// <returns></returns>
+    List<WithdrawAccount> GetWithdrawAccounts();
+
+    Task<bool> AddAccount(string currencyId, string accountName, string accountAddress);
 
     /// <summary>
     /// Recharge to current user's account. From the chain to the platform.
