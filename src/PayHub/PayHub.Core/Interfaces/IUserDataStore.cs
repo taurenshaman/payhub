@@ -23,7 +23,14 @@ namespace PayHub.Interfaces {
     /// <returns></returns>
     List<WithdrawAccount> GetWithdrawAccounts();
 
-    Task<bool> AddAccount(string currencyId, string accountName, string accountAddress);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="currencyId"></param>
+    /// <param name="accountName"></param>
+    /// <param name="accountAddress"></param>
+    /// <returns>success: id; failed: empty</returns>
+    Task<string> SaveAccount(string currencyId, string accountName, string accountAddress, string qrcode);
 
     /// <summary>
     /// Recharge to current user's account. From the chain to the platform.

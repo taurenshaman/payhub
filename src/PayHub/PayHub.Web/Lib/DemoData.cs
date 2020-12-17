@@ -1,6 +1,5 @@
-﻿using PayHub.Core.Models;
+﻿using PayHub.Models;
 using PayHub.Core.Extensions;
-using PayHub.Models;
 using PayHub.ViewModels;
 using System;
 using System.Collections.Generic;

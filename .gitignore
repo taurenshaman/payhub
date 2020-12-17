@@ -195,3 +195,10 @@ ModelManifest.xml
 
 # Node.js
 /src/PayHub/PayHub.FE.Metro/node_modules
+/src/PayHub/PayHub.Core/obj
+/src/PayHub/PayHub.Core/bin
+/src/PayHub/PayHub.DB.EF/obj
+/src/PayHub/PayHub.DB.EF/bin
+/src/PayHub/PayHub.DB.SqlServer/obj
+/src/PayHub/PayHub.DB.SqlServer/bin
+/src/PayHub/PayHub.DB.SqlServer/obj

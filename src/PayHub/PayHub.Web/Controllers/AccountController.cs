@@ -4,16 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PayHub.ViewModels;
 
 namespace PayHub.Controllers {
   public class AccountController : BaseController {
-    public AccountController(ILogger<DefaultController> logger) : base( logger ){
+    public AccountController(IConfiguration config, ILogger<DefaultController> logger) : base( config, logger ) {
     }
 
     [Route( "{username}" )]
     public IActionResult Index(string username) {
+      UserViewModel vm = new UserViewModel();
+      vm.CurrentUser = Tools.BizUtility.LoadUserFromCookie( Request, ConnChuci );
+      // TODO
       // test
       if (string.IsNullOrEmpty( username ))
         username = "jerin";

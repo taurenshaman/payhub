@@ -1,7 +1,7 @@
 ﻿@model UserViewModel
-@{
+@*@{
     List<PayHub.Models.WithdrawAccount> accounts = ViewBag.Accounts;
-}
+}*@
 
 @if (ViewBag.Error != null) {
     <h2 class="fg-red">@ViewBag.Error</h2>
@@ -64,7 +64,7 @@
                             <button class="flat-button mif-copy info" title="Copy"
                                     v-if="item.account && item.account.length > 0"
                                     v-on:click="copyAccount(index)"></button>
-                            <button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button>
+                            @*<button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button>*@
                             <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
                         </div>
                     </div>
@@ -75,7 +75,8 @@
                             <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
                         </div>
                         <div class="card-content d-flex p-2 flex-justify-center flex-align-center">
-                            <img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
+                            <img v-if="item.qrCode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrCode" />
+                            <img v-else-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
                             <div v-else :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
                             </div>
                         </div>

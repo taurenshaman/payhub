@@ -23,6 +23,12 @@ namespace PayHub.Models {
     public string Account { get; set; }
 
     /// <summary>
+    /// base64 string of QRCode image.
+    /// </summary>
+    [JsonProperty( PropertyName = "qrcode" )]
+    public string QRCode { get; set; }
+
+    /// <summary>
     /// Tooltip Name of the account
     /// </summary>
     [JsonProperty( PropertyName = "name" )]

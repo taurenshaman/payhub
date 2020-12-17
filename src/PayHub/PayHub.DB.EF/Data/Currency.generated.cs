@@ -5,7 +5,7 @@
 //     Manual changes to this file may cause unexpected behavior in your application.
 //     Manual changes to this file will be overwritten if the code is regenerated.
 //
-//     Produced by Entity Framework Visual Editor v2.0.5.6
+//     Produced by Entity Framework Visual Editor v3.0.1.3
 //     Source:                    https://github.com/msawczyn/EFDesigner
 //     Visual Studio Marketplace: https://marketplace.visualstudio.com/items?itemName=michaelsawczyn.EFDesigner
 //     Documentation:             https://msawczyn.github.io/EFDesigner/
@@ -47,10 +47,14 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="name"></param>
       /// <param name="unit"></param>
-      public Currency(string name, string unit)
+      public Currency(string id, string name, string unit)
       {
+         if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+         this.Id = id;
+
          if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
          this.Name = name;
 
@@ -64,11 +68,12 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="name"></param>
       /// <param name="unit"></param>
-      public static Currency Create(string name, string unit)
+      public static Currency Create(string id, string name, string unit)
       {
-         return new Currency(name, unit);
+         return new Currency(id, name, unit);
       }
 
       /*************************************************************************
@@ -83,7 +88,7 @@ namespace PayHub.DB.Data
       [MinLength(32)]
       [MaxLength(32)]
       [StringLength(32)]
-      public string Id { get; protected set; }
+      public string Id { get; set; }
 
       /// <summary>
       /// Indexed, Required, Min length = 1, Max length = 64

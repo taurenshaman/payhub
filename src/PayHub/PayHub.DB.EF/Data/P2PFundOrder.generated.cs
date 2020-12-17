@@ -5,7 +5,7 @@
 //     Manual changes to this file may cause unexpected behavior in your application.
 //     Manual changes to this file will be overwritten if the code is regenerated.
 //
-//     Produced by Entity Framework Visual Editor v2.0.5.6
+//     Produced by Entity Framework Visual Editor v3.0.1.3
 //     Source:                    https://github.com/msawczyn/EFDesigner
 //     Visual Studio Marketplace: https://marketplace.visualstudio.com/items?itemName=michaelsawczyn.EFDesigner
 //     Documentation:             https://msawczyn.github.io/EFDesigner/
@@ -47,14 +47,18 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="currencyid"></param>
       /// <param name="fromuserid"></param>
       /// <param name="fromaddress"></param>
       /// <param name="touserid"></param>
       /// <param name="toaddress"></param>
       /// <param name="amount"></param>
-      public P2PFundOrder(string currencyid, string fromuserid, string fromaddress, string touserid, string toaddress, double amount)
+      public P2PFundOrder(string id, string currencyid, string fromuserid, string fromaddress, string touserid, string toaddress, double amount)
       {
+         if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+         this.Id = id;
+
          if (string.IsNullOrEmpty(currencyid)) throw new ArgumentNullException(nameof(currencyid));
          this.CurrencyId = currencyid;
 
@@ -79,15 +83,16 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="currencyid"></param>
       /// <param name="fromuserid"></param>
       /// <param name="fromaddress"></param>
       /// <param name="touserid"></param>
       /// <param name="toaddress"></param>
       /// <param name="amount"></param>
-      public static P2PFundOrder Create(string currencyid, string fromuserid, string fromaddress, string touserid, string toaddress, double amount)
+      public static P2PFundOrder Create(string id, string currencyid, string fromuserid, string fromaddress, string touserid, string toaddress, double amount)
       {
-         return new P2PFundOrder(currencyid, fromuserid, fromaddress, touserid, toaddress, amount);
+         return new P2PFundOrder(id, currencyid, fromuserid, fromaddress, touserid, toaddress, amount);
       }
 
       /*************************************************************************
@@ -102,7 +107,7 @@ namespace PayHub.DB.Data
       [MinLength(32)]
       [MaxLength(32)]
       [StringLength(32)]
-      public string Id { get; protected set; }
+      public string Id { get; set; }
 
       /// <summary>
       /// Required, Min length = 32, Max length = 32

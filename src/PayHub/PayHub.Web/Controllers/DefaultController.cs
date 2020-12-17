@@ -4,27 +4,29 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PayHub.ViewModels;
 
 namespace PayHub.Controllers {
   public class DefaultController : BaseController {
-    public DefaultController(ILogger<DefaultController> logger) : base( logger ){
-      
+    public DefaultController(IConfiguration config, ILogger<DefaultController> logger) : base( config, logger ){
     }
 
     [Route("")]
     public IActionResult Index() {
-      var user = Web.Lib.DemoData.TestAuthenticate();
-      if(user.IsGuest)
-        return View( "Intro", user );
-      return View( "Index", user );
+      ViewModelBase vm = new ViewModelBase();
+      vm.CurrentUser = Tools.BizUtility.LoadUserFromCookie( Request, ConnChuci );
+      if(vm.CurrentUser == null)
+        return View( "Intro", vm );
+      return View( "Index", vm );
     }
 
     [Route( "privacy" )]
     public IActionResult Privacy() {
-      var user = Web.Lib.DemoData.TestAuthenticate();
-      return View( user );
+      ViewModelBase vm = new ViewModelBase();
+      vm.CurrentUser = Tools.BizUtility.LoadUserFromCookie( Request, ConnChuci );
+      return View( vm );
     }
 
     [ResponseCache( Duration = 0, Location = ResponseCacheLocation.None, NoStore = true )]

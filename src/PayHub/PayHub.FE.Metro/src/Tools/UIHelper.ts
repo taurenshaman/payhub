@@ -95,6 +95,11 @@ class UIHelper {
         }
     }
 
+    public static Refresh() {
+        window.location.reload();
+        //window.location.href = window.location.href;
+    }
+
     public static GoBack() {
         window.history.back();
     }

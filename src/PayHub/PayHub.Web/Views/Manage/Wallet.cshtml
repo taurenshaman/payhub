@@ -6,34 +6,131 @@
     <h2 class="fg-red">@ViewBag.Error</h2>
     return;
 }
+@section HeadMeta{
+    <meta name="metro4:init" content="false">
+}
 
-<div class="container grid">
-    <div class="d-flex flex-justify-center w-100">
-        <div class="social-box" style="width: 400px;">
-            <div class="header bg-orange fg-white">
-                <img id="avator" class="avatar bg-light" src="@Model.AvatarUri">
-                <div class="title">@Model.Account.UserName</div>
-                <div class="subtitle">@Model.Account.NickName</div>
+<div id="app" class="container grid">
+    <div class="row mt-3 mb-3">
+        <div class="cell-3">
+            <div class="items-list w-100 set-border bd-gray scroll-y" style="height: 600px; overflow-y: visible;">
+                <div class="item ml-0" v-for="(item, index) in currencies" :key="item.uri">
+                    <span :class="'avatar fg-steel ' + item.icon"></span>
+                    <span :class="'label text-ellipsis fg-' + item.statusColor" style="width: 320px;" :title="item.name">{{item.name}}</span>
+                    <span class="second-label">{{item.unit}}</span>
+                    <span :class="'second-action mif-plus fg-' + item.statusColor"
+                          v-if="item.added === false"
+                          v-on:click="addAccount(index)"></span>
+                </div>
             </div>
-            <ul class="skills">
-                <li>
-                    <div class="text-bold">Works</div>
-                    <div>9</div>
-                </li>
-                <li>
-                    <div class="text-bold">Patrons</div>
-                    <div>88</div>
-                </li>
-                <li>
-                    <div class="text-bold">Reward times</div>
-                    <div>666</div>
-                </li>
-            </ul>
         </div>
+
+        <div class="cell-9">
+            <div class="d-flex flex-justify-center flex-wrap w-100 h-100">
+                <div v-for="(item, index) in accounts" :key="item.uri" :id="'card_' + index"
+                     class="flip-card effect-on-active"
+                     style="width: 300px; height: 380px;">
+                    <div class="front">
+                        <div class="card">
+                            <div class="card-header header">
+                                <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                            </div>
+                            <div class="card-content p-2 text-center" style="height: 210px;">
+                                <h2 class="text-center fg-gray">{{item.name}}</h2>
+                                <textarea :id="'taAccount_' + index" style="height: 100px;" readonly
+                                          data-role="textarea"
+                                          data-clear-button="false"
+                                          data-auto-size="false"
+                                          v-if="item.account && item.account.length > 0"
+                                          v-bind:data-prepend="item.iconInfo"
+                                          v-on:focus="copyAccount(index)">{{item.account}}</textarea>
+                            </div>
+                            <div class="card-footer">
+                                <button class="flat-button mif-copy info" title="Copy"
+                                        v-if="item.account && item.account.length > 0"
+                                        v-on:click="copyAccount(index)"></button>
+                                <button class="flat-button mif-pencil" title="Edit" v-on:click="editAccount(index)"></button>
+                                <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="card">
+                            <div class="card-header header">
+                                <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                            </div>
+                            <div class="card-content d-flex p-2 flex-justify-center flex-align-center">
+                                <img v-if="item.qrCode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrCode" />
+                                <img v-else-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
+                                <div v-else :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
+                                </div>
+                            </div>
+                            <div class="card-footer flex-justify-center">
+                                <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <div id="charmEditAccount" class="border bd-default p-1 bg-white fg-black w-75 h-100" style="max-width: 500px;"
+         data-role="charms" data-position="left">
+        <div class="grid w-100">
+            <div class="row p-3">
+                <h3>Account</h3>
+            </div>
+            <!--currency-->
+            <div class="row p-3">
+                <span class="mif-language"></span><span class="va-middle text-center"></span>
+            </div>
+            <!--Account-->
+            <div class="row p-3">
+                <input id="accountName" type="text" v-model="accountName"
+                       data-role="input" data-prepend="Name"
+                       data-cls-prepend="bg-cyan fg-light"
+                       data-cls-input="text-bold bg-light fg-cyan text-center">
+            </div>
+            <div class="row p-3">
+                <input id="accountAddress" type="text" v-model="accountAddress"
+                       placeholder="Address"
+                       data-role="input" data-prepend="Address"
+                       data-cls-prepend="bg-cyan fg-light"
+                       data-cls-input="text-bold bg-light fg-cyan text-center">
+            </div>
+            <!--QRCode-->
+            <div class="row p-1">
+                <input type="checkbox" data-role="checkbox" data-caption="Auto generate" v-model="autoGenerateQrcode">
+            </div>
+            <div class="row p-2 fg-gray">
+                Maybe Legal Tenders should upload a QRCode image. e.g. Alipay/Wechat/...
+            </div>
+            <div class="row p-3" v-show="autoGenerateQrcode === false">
+                <input id="qrcodeFile" type="file" data-role="file"
+                       data-prepend="<span class='mif-qrcode'></span>"
+                       data-button-title="<span class='mif-image'></span>">
+            </div>
+            <div class="row p-3 flex-justify-center">
+                <button class="button info cycle outline mr-4" onclick="vm.saveAccount();"><span class="mif-checkmark"></span></button>
+                <button class="button info cycle outline" onclick="UIHelper.HideCharm('charmEditAccount');"><span class="mif-cross"></span></button>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section Scripts{
-    @*<script src="~/lib/d3/d3.v5.min.js"></script>*@
-}
+<script type="text/javascript" src="~/lib/3rd/lodash.min.js?v=1.8.3"></script>
+<script type="text/javascript" src="~/lib/3rd/qrcode.min.js"></script>
+<script type="text/javascript" src="~/lib/vue/vue.min.js?v=2.6.11"></script>
+<script type="text/javascript" src="~/js/payhub.min.js" asp-append-version="true"></script>
+<script type="text/javascript">
+        //ViewModelBridge.initialize("@ViewBag.CompatibleLanguageCode", null);
+    var vm = new WalletViewModel();
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        vm.init();
+    });
+
+</script>

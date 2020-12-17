@@ -2,7 +2,11 @@
 
 class DataService {
     static ApiPrefix = "/api/v0/";
-    static Api_Accounts = DataService.ApiPrefix + "account/all";
+    static Api_Account_ListAll = DataService.ApiPrefix + "account/all";
+    static Api_Account_Save = DataService.ApiPrefix + "account/save";
+
+    static Api_Currency_ListAll = DataService.ApiPrefix + "currency/all";
+    
 
     query(uri, queryData, callback, httpMethod = "GET") {
         const activityDialog = Metro.activity.open({

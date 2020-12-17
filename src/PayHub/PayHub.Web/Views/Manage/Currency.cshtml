@@ -1,0 +1,77 @@
+﻿@model ManagementViewModel
+@{
+}
+
+@if (ViewBag.Error != null) {
+    <h2 class="fg-red">@ViewBag.Error</h2>
+    return;
+}
+@section HeadMeta{
+    <meta name="metro4:init" content="false">
+}
+
+<div id="app" class="container grid">
+    <div class="row mt-3 mb-3">
+        <div class="d-flex flex-justify-center flex-wrap w-100 h-100">
+            <div v-for="(item, index) in accounts" :key="item.uri" :id="'card_' + index"
+                 class="flip-card effect-on-active"
+                 style="width: 300px; height: 380px;">
+                <div class="front">
+                    <div class="card">
+                        <div class="card-header header">
+                            <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                        </div>
+                        <div class="card-content p-2 text-center" style="height: 210px;">
+                            <h2 class="text-center fg-gray">{{item.name}}</h2>
+                            <textarea :id="'taAccount_' + index" style="height: 100px;" readonly
+                                      data-role="textarea"
+                                      data-clear-button="false"
+                                      data-auto-size="false"
+                                      v-if="item.account && item.account.length > 0"
+                                      v-bind:data-prepend="item.iconInfo"
+                                      v-on:focus="copyAccount(index)">{{item.account}}</textarea>
+                        </div>
+                        <div class="card-footer">
+                            <button class="flat-button mif-copy info" title="Copy"
+                                    v-if="item.account && item.account.length > 0"
+                                    v-on:click="copyAccount(index)"></button>
+                            <button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button>
+                            <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="card">
+                        <div class="card-header header">
+                            <span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+                        </div>
+                        <div class="card-content d-flex p-2 flex-justify-center flex-align-center">
+                            <img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
+                            <div v-else :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
+                            </div>
+                        </div>
+                        <div class="card-footer flex-justify-center">
+                            <button class="flat-button mif-arrow-right" v-on:click="toggleCard(index)"></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/lib/3rd/lodash.min.js?v=1.8.3"></script>
+<script type="text/javascript" src="~/lib/3rd/qrcode.min.js"></script>
+<script type="text/javascript" src="~/lib/vue/vue.min.js?v=2.6.11"></script>
+<script type="text/javascript" src="~/js/payhub.min.js" asp-append-version="true"></script>
+<script type="text/javascript">
+        //ViewModelBridge.initialize("@ViewBag.CompatibleLanguageCode", null);
+        var vm = new CurrencyViewModel();
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        vm.init();
+    });
+
+</script>
+}

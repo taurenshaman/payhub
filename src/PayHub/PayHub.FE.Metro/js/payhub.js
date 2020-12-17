@@ -1,4 +1,7 @@
 "use strict";
+class AppSettings {
+}
+AppSettings.DefaultUnitOfMoney = "CNY";
 if (!String.prototype.format) {
     String.prototype.format = function () {
         var args = arguments;
@@ -9,6 +12,116 @@ if (!String.prototype.format) {
         });
     };
 }
+class CurrencyCandidates {
+}
+CurrencyCandidates.Data = {
+    cryptoCoins: [
+        {
+            id: "d023ec040f79f1a9b2ac960b43785089",
+            name: "Bitcoin",
+            unit: "BTC"
+        },
+        {
+            id: "94195b7b439ec3bda396c8df3d53e0c0",
+            name: "Ethereum",
+            unit: "ETH"
+        },
+        {
+            id: "116e1fdc7967b296c3b099863cabc22a",
+            name: "EthereumClassic",
+            unit: "ETC"
+        },
+        {
+            id: "f89e1773f4dd0ab54a474e085896877d",
+            name: "Litecoin",
+            unit: "LTC"
+        },
+        {
+            id: "091527f0a496d0eafd2754f1b9590aa9",
+            name: "Nervos",
+            unit: "CKB",
+            icon: "pi-ckb"
+        },
+        {
+            id: "2c0847f66f16adcc6ddf93f1db5827e7",
+            name: "Cosmos",
+            unit: "ATOM",
+            icon: "pi-atom"
+        },
+        {
+            id: "d3428ee9afeb947b67aa37e634148ee5",
+            name: "EOS",
+            unit: "EOS"
+        },
+        {
+            id: "ad4df7721cbab485e8fc04479aecd7e0",
+            name: "Zcash",
+            unit: "ZEC"
+        },
+        {
+            id: "0ada0159f6906ac6d4e9634885c06bbc",
+            name: "Horizen",
+            unit: "ZEN",
+            icon: "pi-zen"
+        },
+        {
+            id: "17e296456ad17014fd9785da82c18a0c",
+            name: "StellarLumens",
+            unit: "XLM"
+        },
+        {
+            id: "c33eb0623e9324c722c1e0a5d1fdb2a3",
+            name: "Polkadot",
+            unit: "DOT",
+            icon: "pi-dot"
+        },
+        {
+            id: "c0062863e3e99f67607ad1ae9a4299a7",
+            name: "Ripple",
+            unit: "XRP"
+        },
+        {
+            id: "dd48f2c21016915ba6c795f320a4cf83",
+            name: "TRON",
+            unit: "TRX"
+        },
+        {
+            id: "96678759312f067a9fd622b637502e36",
+            name: "MakerDAO",
+            unit: "DAI",
+            icon: "pi-dai"
+        },
+        {
+            id: "23ec191a8c1a7fa3c70c6088cd23e634",
+            name: "Filecoin",
+            unit: "FIL",
+            icon: "pi-fil"
+        }
+    ],
+    legalTenders: [
+        {
+            id: "9b88c95a15e018c3f8038a7d0160145c",
+            name: "Paypal",
+            unit: AppSettings.DefaultUnitOfMoney,
+            isLegalTender: true,
+            icon: "mif-paypal"
+        },
+        {
+            id: "92a176f8a430b8b977ffe5fcff601372",
+            name: "Alipay",
+            unit: AppSettings.DefaultUnitOfMoney,
+            isLegalTender: true,
+            icon: "pi-alipay"
+        },
+        {
+            id: "c20ff00858b26de6ff99273ec51c18de",
+            name: "WeChatPay",
+            unit: AppSettings.DefaultUnitOfMoney,
+            isLegalTender: true,
+            icon: "pi-wechat"
+        }
+    ]
+};
 class BrowserUtility {
     static IsMobileBrowser() {
         let userAgent = navigator.userAgent || navigator.vendor;
@@ -69,7 +182,9 @@ class DataService {
     }
 }
 DataService.ApiPrefix = "/api/v0/";
-DataService.Api_Accounts = DataService.ApiPrefix + "account/all";
+DataService.Api_Account_ListAll = DataService.ApiPrefix + "account/all";
+DataService.Api_Account_Save = DataService.ApiPrefix + "account/save";
+DataService.Api_Currency_ListAll = DataService.ApiPrefix + "currency/all";
 class InputUtility {
     static copyToClipboard() {
         try {
@@ -78,6 +193,14 @@ class InputUtility {
         catch (err) {
             console.log("InputUtility.copyToClipboard: " + err);
         }
+    }
+    static async fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
     }
 }
 async function http(request) {
@@ -201,6 +324,9 @@ class UIHelper {
             }, false);
         }
     }
+    static Refresh() {
+        window.location.reload();
+    }
     static GoBack() {
         window.history.back();
     }
@@ -220,19 +346,45 @@ class ViewModelBase {
         this.api = new DataService();
     }
 }
-class AccountViewModel extends ViewModelBase {
+class AccountViewModelBase extends ViewModelBase {
+    constructor() {
+        super();
+        this.currencies = _.concat(CurrencyCandidates.Data.cryptoCoins, CurrencyCandidates.Data.legalTenders);
+    }
+    initQRCodeOfCards() {
+        for (let i = 0; i < this.accounts.length; i++) {
+            const account = this.accounts[i];
+            if (account.qrcode && account.qrcode.length > 4)
+                continue;
+            UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
+        }
+    }
+    fitCurrencies() {
+        _.forEach(this.currencies, coin => {
+            if (!coin.icon) {
+                coin.icon = "cc " + coin.unit;
+            }
+        });
+    }
+    fitAccounts() {
+        _.forEach(this.accounts, account => {
+            const currency = _.find(this.currencies, cur => account.currencyId === cur.id);
+            account.theCurrency = _.clone(currency);
+        });
+    }
+}
+class AccountViewModel extends AccountViewModelBase {
     constructor() {
         super();
     }
     async init() {
-        const data = await this.api.getAsync(DataService.Api_Accounts, {});
+        const data = await this.api.getAsync(DataService.Api_Account_ListAll, {});
         this.accounts = data.parsedBody;
+        this.fitCurrencies();
+        this.fitAccounts();
         this.initVue();
     }
     initVue() {
-        _.forEach(this.accounts, a => {
-            a.iconInfo = "<span class='cc " + a.theCurrency.unit + "'></span>";
-        });
         const ctx = this;
         this.app = new Vue({
             el: '#app',
@@ -262,10 +414,126 @@ class AccountViewModel extends ViewModelBase {
         InputUtility.copyToClipboard();
     }
     afterMetroReady() {
-        for (let i = 0; i < this.accounts.length; i++) {
-            const account = this.accounts[i];
-            UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
+        this.initQRCodeOfCards();
+    }
+}
+class CurrencyManagerViewModel extends ViewModelBase {
+    constructor() {
+        super();
+    }
+    async init() {
+        const data = await this.api.getAsync(DataService.Api_Account_ListAll, {});
+        this.currencies = data.parsedBody;
+        this.initVue();
+    }
+    initVue() {
+        const ctx = this;
+        const data = _.concat(CurrencyCandidates.Data.cryptoCoins, CurrencyCandidates.Data.legalTenders);
+        _.forEach(data, coin => {
+            coin.icon = "cc " + coin.unit;
+            const index = _.findIndex(ctx.currencies, cur => cur.id === coin.id);
+            coin.supported = (index >= 0);
+            coin.statusColor = index < 0 ? "cyan" : "green";
+        });
+        this.app = new Vue({
+            el: '#app',
+            data: {
+                accounts: data
+            },
+            methods: {
+                supportCurrency: function (index) {
+                },
+            },
+            mounted: function () {
+                Metro.init();
+                ctx.afterMetroReady();
+            }
+        });
+    }
+    afterMetroReady() {
+    }
+}
+class WalletViewModel extends AccountViewModelBase {
+    constructor() {
+        super();
+    }
+    async init() {
+        const data = await this.api.getAsync(DataService.Api_Account_ListAll, {});
+        this.accounts = data.parsedBody;
+        this.updateCurrenciesStatus();
+        this.fitCurrencies();
+        this.fitAccounts();
+        this.initVue();
+    }
+    initVue() {
+        const ctx = this;
+        this.app = new Vue({
+            el: '#app',
+            data: {
+                accounts: this.accounts,
+                currencies: this.currencies,
+                theCurrency: {},
+                accountName: "",
+                accountAddress: "",
+                autoGenerateQrcode: true
+            },
+            methods: {
+                addAccount: function (index) {
+                    const currency = this.currencies[index];
+                    this.theCurrency = currency;
+                    this.accountName = currency.name + "(" + currency.unit + ")";
+                    this.accountAddress = "";
+                    UIHelper.ShowCharm("charmEditAccount");
+                },
+                editAccount: function (index) {
+                    const account = this.accounts[index];
+                    this.theCurrency = _.find(ctx.currencies, i => i.id === account.currencyId);
+                    this.accountName = account.name;
+                    this.accountAddress = account.account;
+                    UIHelper.ShowCharm("charmEditAccount");
+                },
+                toggleCard: function (index) {
+                    $('#card_' + index).toggleClass('active');
+                }
+            },
+            mounted: function () {
+                Metro.init();
+                ctx.afterMetroReady();
+            }
+        });
+    }
+    updateCurrenciesStatus() {
+        _.forEach(this.currencies, coin => {
+            const index = _.findIndex(this.accounts, account => account.currencyId === coin.id);
+            coin.added = (index >= 0);
+            coin.statusColor = index < 0 ? "cyan" : "green";
+        });
+    }
+    async saveAccount() {
+        const ctx = this;
+        const qrcodeFile = document.getElementById("qrcodeFile");
+        let base64 = "";
+        if (qrcodeFile.files.length > 0) {
+            base64 = await InputUtility.fileToBase64(qrcodeFile.files[0]);
         }
+        const postData = {
+            currencyId: ctx.app.theCurrency.id,
+            name: ctx.app.accountName,
+            address: ctx.app.accountAddress,
+            qrcode: base64
+        };
+        const res = await this.api.postAsync(DataService.Api_Account_Save, JSON.stringify(postData));
+        const data = res.parsedBody;
+        if (data && data.id && data.id.length === 32) {
+            UIHelper.ToastMessage("Saved!");
+            UIHelper.Refresh();
+        }
+        else {
+            UIHelper.ToastError("Unkown Error!");
+        }
+    }
+    afterMetroReady() {
+        this.initQRCodeOfCards();
     }
 }
 //# sourceMappingURL=payhub.js.map

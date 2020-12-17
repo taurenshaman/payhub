@@ -1,4 +1,0 @@
-F:\Github\payhub\src\PayHub\PayHub.DB.SqlServer\bin\Debug\netcoreapp3.1\PayHub.Core.dll
-F:\Github\payhub\src\PayHub\PayHub.DB.SqlServer\obj\Debug\netcoreapp3.1\PayHub.DB.SqlServer.csprojAssemblyReference.cache
-F:\Github\payhub\src\PayHub\PayHub.DB.SqlServer\obj\Debug\netcoreapp3.1\PayHub.DB.SqlServer.AssemblyInfoInputs.cache
-F:\Github\payhub\src\PayHub\PayHub.DB.SqlServer\obj\Debug\netcoreapp3.1\PayHub.DB.SqlServer.AssemblyInfo.cs

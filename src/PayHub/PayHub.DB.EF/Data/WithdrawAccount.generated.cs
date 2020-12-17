@@ -5,7 +5,7 @@
 //     Manual changes to this file may cause unexpected behavior in your application.
 //     Manual changes to this file will be overwritten if the code is regenerated.
 //
-//     Produced by Entity Framework Visual Editor v2.0.5.6
+//     Produced by Entity Framework Visual Editor v3.0.1.3
 //     Source:                    https://github.com/msawczyn/EFDesigner
 //     Visual Studio Marketplace: https://marketplace.visualstudio.com/items?itemName=michaelsawczyn.EFDesigner
 //     Documentation:             https://msawczyn.github.io/EFDesigner/
@@ -47,12 +47,16 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="userid"></param>
       /// <param name="currencyid"></param>
       /// <param name="account"></param>
       /// <param name="name"></param>
-      public WithdrawAccount(string userid, string currencyid, string account, string name)
+      public WithdrawAccount(string id, string userid, string currencyid, string account, string name)
       {
+         if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+         this.Id = id;
+
          if (string.IsNullOrEmpty(userid)) throw new ArgumentNullException(nameof(userid));
          this.UserId = userid;
 
@@ -72,13 +76,14 @@ namespace PayHub.DB.Data
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="id"></param>
       /// <param name="userid"></param>
       /// <param name="currencyid"></param>
       /// <param name="account"></param>
       /// <param name="name"></param>
-      public static WithdrawAccount Create(string userid, string currencyid, string account, string name)
+      public static WithdrawAccount Create(string id, string userid, string currencyid, string account, string name)
       {
-         return new WithdrawAccount(userid, currencyid, account, name);
+         return new WithdrawAccount(id, userid, currencyid, account, name);
       }
 
       /*************************************************************************
@@ -93,7 +98,7 @@ namespace PayHub.DB.Data
       [MinLength(32)]
       [MaxLength(32)]
       [StringLength(32)]
-      public string Id { get; protected set; }
+      public string Id { get; set; }
 
       /// <summary>
       /// Indexed, Required, Min length = 32, Max length = 32
@@ -130,6 +135,38 @@ namespace PayHub.DB.Data
       [MaxLength(256)]
       [StringLength(256)]
       public string Name { get; set; }
+
+      /// <summary>
+      /// Backing field for QRCode
+      /// </summary>
+      protected string _qRCode;
+      /// <summary>
+      /// When provided in a partial class, allows value of QRCode to be changed before setting.
+      /// </summary>
+      partial void SetQRCode(string oldValue, ref string newValue);
+      /// <summary>
+      /// When provided in a partial class, allows value of QRCode to be changed before returning.
+      /// </summary>
+      partial void GetQRCode(ref string result);
+
+      public string QRCode
+      {
+         get
+         {
+            string value = _qRCode;
+            GetQRCode(ref value);
+            return (_qRCode = value);
+         }
+         set
+         {
+            string oldValue = _qRCode;
+            SetQRCode(oldValue, ref value);
+            if (oldValue != value)
+            {
+               _qRCode = value;
+            }
+         }
+      }
 
    }
 }

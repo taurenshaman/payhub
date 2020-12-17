@@ -1,33 +1,23 @@
-﻿/// <reference path="./ViewModelBase.ts" />
+﻿/// <reference path="./AccountViewModelBase.ts" />
 //import { ViewModelBase } from './ViewModelBase';
 
 "use strict";
 
-class AccountViewModel extends ViewModelBase {
-    app;
-
-    accounts;
-
+class AccountViewModel extends AccountViewModelBase {
     constructor() {
         super();
     }
 
     async init() {
-        //const ctx = this;
-        //const data = this.api.getAsync(DataService.Api_AccountCurrencies, {}).then(res => {
-        //    console.log(res);
-        //    ctx.initVue(res);
-        //});
-
-        const data = await this.api.getAsync(DataService.Api_Accounts, {});
+        const data = await this.api.getAsync(DataService.Api_Account_ListAll, {});
         this.accounts = data.parsedBody;
+
+        this.fitCurrencies();
+        this.fitAccounts();
         this.initVue();
     }
 
     initVue() {
-        _.forEach(this.accounts, a => {
-            a.iconInfo = "<span class='cc " + a.theCurrency.unit + "'></span>";
-        });
         const ctx = this;
 
         this.app = new Vue({
@@ -62,12 +52,7 @@ class AccountViewModel extends ViewModelBase {
     }
 
     afterMetroReady() {
-        for (let i = 0; i < this.accounts.length; i++) {
-            const account = this.accounts[i];
-			if(account.qrcode && account.qrcode.length > 4)
-					continue;
-            UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
-        }
+        this.initQRCodeOfCards();
     }
 
 }

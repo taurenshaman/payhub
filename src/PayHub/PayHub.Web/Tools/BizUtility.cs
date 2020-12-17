@@ -1,136 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using PayHub.ViewModels;
+using System.Diagnostics;
+using PayHub.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using PayHub.Web.Lib;
 
 namespace PayHub.Tools {
   public class BizUtility {
 
-    ///// <summary>
-    ///// 根据Cookie信息读取用户数据。
-    ///// </summary>
-    ///// <returns></returns>
-    //public static void LoadUserFromCookieAndLogin( HttpRequestBase request, ref ViewModelBase vm ) {
-    //  if ( request == null ||
-    //    request.Cookies[UserManagement.StorageKey_AccountID] == null || request.Cookies[UserManagement.StorageKey_AccountPassword] == null )
-    //    return;
-    //  BizHelper helper = BizHelper.CreateBizHelper();
-    //  var cookieAccount = request.Cookies[UserManagement.StorageKey_AccountID];
-    //  var cookiePwd = request.Cookies[UserManagement.StorageKey_AccountPassword];
+    public static AuthUser LoadUserFromCookie(HttpRequest request, string connChuci) {
+      // Chuci Project:
+      // 1. Check cookies
+      // 2. Authenticate and get a User model
+      // 3. init a AuthUser model
 
-    //  UserGroup group = null;
-    //  vm.User = helper.Login( cookieAccount.Value, cookiePwd.Value, request.UserHostAddress, out group );
-    //  vm.UserGroup = group;
-    //  if (vm.User == null)
-    //    return;
+      throw new NotImplementedException();
 
-    //  AuthUserInfo authUser = new AuthUserInfo() {
-    //    Id = vm.User.Id,
-    //    UserName = vm.User.UserName,
-    //    Password = cookiePwd.Value
-    //  };
-    //  vm.AuthUser = authUser;
-    //}
+      //if (request == null ||
+      //  request.Cookies[ChuciBizKeys.StorageKey_AccountID] == null || request.Cookies[ChuciBizKeys.StorageKey_AccountPassword] == null)
+      //  return null;
 
-    //public static AuthUserInfo LoadUserFromCookie(HttpRequestBase request) {
-    //  if (request == null ||
-    //    request.Cookies[UserManagement.StorageKey_AccountID] == null || request.Cookies[UserManagement.StorageKey_AccountPassword] == null)
-    //    return null;
-      
-    //  var cookieAccount = request.Cookies[UserManagement.StorageKey_AccountID];
-    //  var cookiePwd = request.Cookies[UserManagement.StorageKey_AccountPassword];
+      //var cookieAccount = request.Cookies[ChuciBizKeys.StorageKey_AccountID];
+      //var cookiePwd = request.Cookies[ChuciBizKeys.StorageKey_AccountPassword];
 
-    //  BizHelper helper = BizHelper.CreateBizHelper();
-    //  var user = helper.SelectUserByAccount( cookieAccount.Value );
-    //  if (user == null)
-    //    return null;
+      //var helper = new Chuci.Business.BizHelper( connChuci );
+      //var user = helper.Authenticate( cookieAccount, cookiePwd  );
+      //if (user == null)
+      //  return null;
 
-    //  AuthUserInfo authUser = new AuthUserInfo() {
-    //    Id = user.Id,
-    //    UserName = user.UserName,
-    //    Password = cookiePwd.Value
-    //  };
-    //  return authUser;
-    //}
-
-    //public static AuthUserInfo LoadUserFromRequest(HttpRequestBase request) {
-    //  string account = null;
-    //  string pwd = null;
-
-    //  var appId = request.QueryString[UserManagement.StorageKey_AppID];
-    //  if (string.IsNullOrWhiteSpace( appId )) { // 默认：本站
-    //    account = request.Params[UserManagement.StorageKey_AccountID];
-    //    pwd = request.Params[UserManagement.StorageKey_AccountPassword];
-    //  }
-    //  else {
-    //    // TODO：检查来源Host是否与注册AppID的Host一致
-
-    //    account = request.QueryString[UserManagement.StorageKey_AccountID];
-    //    pwd = request.QueryString[UserManagement.StorageKey_AccountPassword];
-
-    //    if (string.IsNullOrWhiteSpace( account ) || string.IsNullOrWhiteSpace( pwd )) {
-    //      account = request.Headers[UserManagement.StorageKey_AccountID];
-    //      pwd = request.Headers[UserManagement.StorageKey_AccountPassword];
-    //    }
-
-    //    if (string.IsNullOrWhiteSpace( account ) || string.IsNullOrWhiteSpace( pwd )) {
-    //      account = request.Params[UserManagement.StorageKey_AccountID];
-    //      pwd = request.Params[UserManagement.StorageKey_AccountPassword];
-    //    }
-
-    //  }
-
-    //  if (string.IsNullOrWhiteSpace( account ) || string.IsNullOrWhiteSpace( pwd )) {
-    //    return null;
-    //  }
-
-    //  UserGroup userGroup = null;
-    //  BizHelper helper = BizHelper.CreateBizHelper();
-    //  var user = helper.Login( account, pwd, request.UserHostAddress, out userGroup );
-    //  if (user == null)
-    //    return null;
-
-    //  AuthUserInfo authUser = new AuthUserInfo() {
-    //    Id = user.Id,
-    //    UserName = user.UserName,
-    //    Password = pwd
-    //  };
-    //  return authUser;
-    //}
-
-    //public static bool AuthApiFromRequest(HttpRequestBase request) {
-    //  string appid = null;
-    //  string appkey = null;
-
-    //  appid = request.QueryString[UserManagement.StorageKey_AppID];
-    //  if (string.IsNullOrWhiteSpace( appid )) { // 默认：本站
-    //    return true;
-    //  }
-    //  else {
-    //    // TODO：检查来源Host是否与注册AppID的Host一致
-    //  }
-    //  return false;
-    //}
-
-    //public static List<User> GetUsers(IEnumerable<string> ids) {
-    //  BizHelper helper = BizHelper.CreateBizHelper();
-    //  var r = helper.SelectUsers( ids );
-    //  return r;
-    //}
-
-    //public static string GetUserId(string username) {
-    //  BizHelper helper = BizHelper.CreateBizHelper();
-    //  var r = helper.SelectUserByUserName( username );
-    //  return r == null ? String.Empty : r.Id;
-    //}
-
-    //public static string GetTemplatePath( string language ) {
-    //  string templatePath = AppDomain.CurrentDomain.BaseDirectory + @"Resources\Data\JsonTemplates\" + language + @"\";
-    //  return templatePath;
-    //}
+      //AuthUser authUser = new AuthUser() {
+      //  Id = user.Id,
+      //  UserName = user.UserName,
+      //  NickName = user.NickName
+      //};
+      //return authUser;
+    }
 
   }
 

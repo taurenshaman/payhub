@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
@@ -23,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\PayHubModels.tt">
+    <None Update="Data\PayHubDb.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PayHubModels.cs</LastGenOutput>
+      <LastGenOutput>PayHubDb.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -34,10 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Data\PayHubModels.cs">
+    <Compile Update="Data\PayHubDb.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>PayHubModels.tt</DependentUpon>
+      <DependentUpon>PayHubDb.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
