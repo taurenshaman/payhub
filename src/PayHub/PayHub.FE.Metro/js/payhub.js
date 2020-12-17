@@ -351,14 +351,6 @@ class AccountViewModelBase extends ViewModelBase {
         super();
         this.currencies = _.concat(CurrencyCandidates.Data.cryptoCoins, CurrencyCandidates.Data.legalTenders);
     }
-    initQRCodeOfCards() {
-        for (let i = 0; i < this.accounts.length; i++) {
-            const account = this.accounts[i];
-            if (account.qrcode && account.qrcode.length > 4)
-                continue;
-            UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
-        }
-    }
     fitCurrencies() {
         _.forEach(this.currencies, coin => {
             if (!coin.icon) {
@@ -371,6 +363,33 @@ class AccountViewModelBase extends ViewModelBase {
             const currency = _.find(this.currencies, cur => account.currencyId === cur.id);
             account.theCurrency = _.clone(currency);
         });
+    }
+    initQRCodeOfCard(index, data) {
+        if (data.qrcode && data.qrcode.length > 4)
+            return;
+        UIHelper.CreateQRCode("qrcode_" + index, data.account, 200);
+    }
+    initCardEffect(index, idPrefix = "card_") {
+        if (index < 0)
+            return;
+        const cardDiv = document.getElementById(idPrefix + index);
+        const frontCard = cardDiv.children[0].children[0];
+        const backCard = cardDiv.children[1].children[0];
+        cardDiv.addEventListener('mouseenter', e => {
+            frontCard.classList.add("shadow-1");
+            backCard.classList.add("shadow-1");
+        });
+        cardDiv.addEventListener('mouseleave', e => {
+            frontCard.classList.remove("shadow-1");
+            backCard.classList.remove("shadow-1");
+        });
+    }
+    initAccountCards() {
+        for (let i = 0; i < this.accounts.length; i++) {
+            const account = this.accounts[i];
+            this.initQRCodeOfCard(i, account);
+            this.initCardEffect(i);
+        }
     }
 }
 class AccountViewModel extends AccountViewModelBase {
@@ -400,6 +419,10 @@ class AccountViewModel extends AccountViewModelBase {
                 },
                 toggleCard: function (index) {
                     $('#card_' + index).toggleClass('active');
+                },
+                getIconInfo: function (index) {
+                    const account = ctx.accounts[index];
+                    return "<span class='" + account.theCurrency.icon + "'></span>";
                 }
             },
             mounted: function () {
@@ -414,7 +437,7 @@ class AccountViewModel extends AccountViewModelBase {
         InputUtility.copyToClipboard();
     }
     afterMetroReady() {
-        this.initQRCodeOfCards();
+        this.initAccountCards();
     }
 }
 class CurrencyManagerViewModel extends ViewModelBase {
@@ -494,6 +517,10 @@ class WalletViewModel extends AccountViewModelBase {
                 },
                 toggleCard: function (index) {
                     $('#card_' + index).toggleClass('active');
+                },
+                getIconInfo: function (index) {
+                    const account = ctx.accounts[index];
+                    return "<span class='" + account.theCurrency.icon + "'></span>";
                 }
             },
             mounted: function () {
@@ -533,7 +560,7 @@ class WalletViewModel extends AccountViewModelBase {
         }
     }
     afterMetroReady() {
-        this.initQRCodeOfCards();
+        this.initAccountCards();
     }
 }
 //# sourceMappingURL=payhub.js.map

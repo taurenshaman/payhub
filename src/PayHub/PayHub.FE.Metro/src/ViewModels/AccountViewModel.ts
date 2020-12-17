@@ -35,6 +35,10 @@ class AccountViewModel extends AccountViewModelBase {
                 },
                 toggleCard: function (index) {
                     $('#card_' + index).toggleClass('active');
+                },
+                getIconInfo: function(index) {
+                    const account = ctx.accounts[index];
+                    return "<span class='"+ account.theCurrency.icon + "'></span>";
                 }
             },
             mounted: function () {
@@ -52,7 +56,7 @@ class AccountViewModel extends AccountViewModelBase {
     }
 
     afterMetroReady() {
-        this.initQRCodeOfCards();
+        this.initAccountCards();
     }
 
 }
