@@ -76,20 +76,16 @@
 					</div>
 					<ul class="skills">
 						<li>
-							<div class="text-bold"><a href="#">Twitter</a></div>
-							<div>@twitter</div>
+							<div class="text-bold"><a href="http://afdian.net/@taurenshaman">爱发电</a></div>
+							<div>@taurenshaman</div>
 						</li>
 						<li>
-							<div class="text-bold"><a href="#">Facebook</a></div>
-							<div>@facebook</div>
+							<div class="text-bold"><a href="https://www.buymeacoffee.com/taurenshaman">BuyMeACoffee</a></div>
+							<div>@taurenshaman</div>
 						</li>
 						<li>
-							<div class="text-bold"><a href="#">BuyMeACoffee</a></div>
-							<div>@buymeacoffee</div>
-						</li>
-						<li>
-							<div class="text-bold"><a href="#">Patreon</a></div>
-							<div>@patreon</div>
+							<div class="text-bold"><a href="https://www.patreon.com/taurenshaman">Patreon</a></div>
+							<div>@taurenshaman</div>
 						</li>
 					</ul>
 				</div>
@@ -105,8 +101,8 @@
 					 style="width: 300px; height: 380px;">
 					<div class="front">
 						<div class="card">
-							<div class="card-header header">
-								<span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+							<div class="card-header bg-cyan fg-white">
+								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
 							</div>
 							<div class="card-content p-2 text-center" style="height: 210px;">
 								<h2 class="text-center fg-gray">{{item.name}}</h2>
@@ -128,8 +124,8 @@
 					</div>
 					<div class="back">
 						<div class="card">
-							<div class="card-header header">
-								<span :class="'icon cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+							<div class="card-header bg-cyan fg-white">
+								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
 							</div>
 							<div class="card-content d-flex p-2 flex-justify-center flex-align-center">
 								<img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
@@ -174,6 +170,19 @@
 		function afterMetroReady() {
 			for (let i = 0; i < pageData.accounts.length; i++) {
 				const account = pageData.accounts[i];
+				// mouse enter/leave: flip-card > front(0)/back(1) > card
+				const cardDiv = document.getElementById("card_" + i);
+				const frontCard = cardDiv.children[0].children[0];
+				const backCard = cardDiv.children[1].children[0];
+				cardDiv.addEventListener('mouseenter', e => {
+					frontCard.classList.add("shadow-1");
+					backCard.classList.add("shadow-1");
+				});
+				cardDiv.addEventListener('mouseleave', e => {
+					frontCard.classList.remove("shadow-1");
+					backCard.classList.remove("shadow-1");
+				});
+				// qrcode
 				if(account.qrcode && account.qrcode.length > 4)
 					continue;
 				UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
