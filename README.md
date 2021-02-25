@@ -18,10 +18,13 @@ Pay Hub for decentralized web. Bring payment to every website without redirectin
 ## for Static Websites
 Try [Single Html Pages](https://github.com/taurenshaman/payhub/tree/master/src/SinglePages) 🙂
 
-## Donate
-* Bitcoin | BTC: 17KYrfoipSWsjDNDdDsovANvDdvyRWV2Kg
-* Ethereum | ETH: 0x309dDffb87f07AfBA6B69cFeD4BdfaEA774f6ABb
----
+## Donate Address
+### 1. mall cash; low fees
+* Nervos CKB: ckb1qyq2e4dgfga975npy8ete2vhfdw6te5ykmvq2ukf6a
+* Doge Coin: DQFQYvfCKoLkr4j1MPivfBYeiQDuEpdc7r
+* Tron/TRX: TQGayyNHtsNkUsf1QZwwAXjmEjaW8wKirD
+
+### 2. 3rd platforms
 * [BuyMeACoffee](https://www.buymeacoffee.com/taurenshaman)
    [![Buy Me A Coffee](https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png)](https://www.buymeacoffee.com/taurenshaman)
 * [Patreon](https://www.patreon.com/taurenshaman)
