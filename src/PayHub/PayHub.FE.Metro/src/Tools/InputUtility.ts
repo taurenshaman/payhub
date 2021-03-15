@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-class InputUtility {
+export class InputUtility {
     public static copyToClipboard() {
         try {
             document.execCommand("copy");
@@ -10,7 +10,7 @@ class InputUtility {
         }
     }
 
-    public static async fileToBase64(file) {
+    public static async fileToBase64(file: File) {
         return new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);

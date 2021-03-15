@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-class BrowserUtility {
+export class BrowserUtility {
     public static IsMobileBrowser(): boolean {
         let userAgent: string = navigator.userAgent || navigator.vendor;// || window.opera;
         //(function (a, b) {

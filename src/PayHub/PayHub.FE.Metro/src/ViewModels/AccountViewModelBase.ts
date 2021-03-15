@@ -1,12 +1,14 @@
-/// <reference path="./ViewModelBase.ts" />
+import { Currency, WithdrawAccount, CurrencyCandidates } from '../Models';
+import {UIHelper} from '../Tools';
+import { ViewModelBase } from './ViewModelBase';
 
 "use strict";
 
-class AccountViewModelBase extends ViewModelBase {
-    app;
+export class AccountViewModelBase extends ViewModelBase {
+    app: any;
 
-    accounts;
-    currencies;
+    accounts: Array<WithdrawAccount>;
+    currencies: Array<Currency>;
 
     constructor() {
         super();
@@ -15,7 +17,7 @@ class AccountViewModelBase extends ViewModelBase {
     }
 
     fitCurrencies() {
-        _.forEach(this.currencies, coin => {
+        this.currencies.forEach(coin => {
             if(!coin.icon ){
                 coin.icon = "cc " + coin.unit;
             }
@@ -23,13 +25,13 @@ class AccountViewModelBase extends ViewModelBase {
     }
     
     fitAccounts(){
-        _.forEach(this.accounts, account => {
-            const currency = _.find(this.currencies, cur => account.currencyId === cur.id);
+        this.accounts.forEach(account => {
+            const currency = this.currencies.find(cur => account.currencyId === cur.id);
             account.theCurrency = _.clone(currency);
         });
     }
 
-    initQRCodeOfCard(index: number, data) {
+    initQRCodeOfCard(index: number, data: any) {
         if(data.qrcode && data.qrcode.length > 4)
             return;
         UIHelper.CreateQRCode("qrcode_" + index, data.account, 200);

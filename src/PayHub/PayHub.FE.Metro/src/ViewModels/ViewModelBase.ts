@@ -1,6 +1,8 @@
 ﻿"use strict";
 
-class ViewModelBase {
+import { DataService } from "../Tools";
+
+export class ViewModelBase {
     app: Vue;
     api: DataService;
 

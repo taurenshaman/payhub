@@ -1,76 +1,79 @@
 ﻿"use strict";
 
-class UIHelper {
+export class UIHelper {
     //public static charmId: string = "charm";
     //public static editAreaIdInCharm: string = "divEditArea";
 
-    public static ShowCharm(id) {
+    public static ShowCharm(id: string) {
         //var charm = $("#" + id).data("charms");
         //charm.open();
         Metro.charms.open("#" + id);
     }
 
-    public static HideCharm(id) {
+    public static HideCharm(id: string) {
         //var charm = $("#" + id).data("charms");
         //charm.close();
         Metro.charms.close("#" + id);
     }
 
-    public static HideCharms(ids) {
-        _.forEach(ids, id => {
-            //UIHelper.HideCharm(id);
+    public static HideCharms(ids: Array<string>) {
+        // _.forEach(ids, id => {
+        //     Metro.charms.close("#" + id);
+        // });
+        ids.forEach( id =>{
             Metro.charms.close("#" + id);
         });
     }
 
-    public static ToggleCharm(id) {
+    public static ToggleCharm(id: string) {
         Metro.charms.toggle("#" + id);
     }
 
-    public static disableElement(id) {
+    public static disableElement(id: string) {
         $("#" + id).attr('disabled', "true");
     }
 
-    public static enableElement(id) {
+    public static enableElement(id: string) {
         $("#" + id).attr('disabled', "false");
     }
 
-    public static ShowMessage(title, message) {
+    public static ShowMessage(title: string, message: string) {
         Metro.notify.create(message, title, {
             cls: "info"
         });
     }
 
-    public static ShowError(title, error) {
+    public static ShowError(title: string, error: string) {
         Metro.notify.create(error, title, {
             cls: "alert"
         });
     }
 
-    public static ToastError(msg, milleseconds = 5000) {
+    public static ToastError(msg: string, milleseconds = 5000) {
         const toast = Metro.toast.create;
         toast(msg, null, milleseconds, "bg-red fg-white");
     }
 
-    public static ToastMessage(msg, milleseconds = 5000) {
+    public static ToastMessage(msg: string, milleseconds = 5000) {
         const toast = Metro.toast.create;
         toast(msg, null, milleseconds, "bg-green fg-white");
     }
 
 
-    public static LaunchFullScreen(element) {
+    public static LaunchFullScreen(element: HTMLElement) {
         if (element.requestFullscreen) {
             element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) {
-            element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullscreen) {
-            element.webkitRequestFullscreen();
-        } else if (element.msRequestFullscreen) {
-            element.msRequestFullscreen();
-        }
+        } 
+        // else if (element.mozRequestFullScreen) {
+        //     element.mozRequestFullScreen();
+        // } else if (element.webkitRequestFullscreen) {
+        //     element.webkitRequestFullscreen();
+        // } else if (element.msRequestFullscreen) {
+        //     element.msRequestFullscreen();
+        // }
     }
 
-    public static SetupFullScreen(element, callbackFullScreenChange) {
+    public static SetupFullScreen(element: HTMLElement, callbackFullScreenChange: Function) {
         if (element.addEventListener) { // listen to exitFullScreen
             element.addEventListener('webkitfullscreenchange', () => {
                 if (callbackFullScreenChange) {
@@ -104,7 +107,7 @@ class UIHelper {
         window.history.back();
     }
 
-    public static CreateQRCode(eleId, text, size=256) {
+    public static CreateQRCode(eleId: string, text: string, size=256) {
         const qrContainer = document.getElementById(eleId);
         if (qrContainer) {
             const qrc = new QRCode(qrContainer, {

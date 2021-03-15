@@ -1,8 +1,7 @@
-/// <reference path="../AppSettings.ts" />
-
 "use strict";
+import AppSettings from "../AppSettings";
 
-class CurrencyCandidates{
+export class CurrencyCandidates{
     public static readonly Data = {
         cryptoCoins: [
             {

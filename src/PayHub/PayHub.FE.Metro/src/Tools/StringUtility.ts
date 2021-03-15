@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-class StringUtility {
+export class StringUtility {
     public static EscapeSpecialChars(str: string): string {
         return str.replace(/\\n/g, "\\n")
             .replace(/\\'/g, "\\'")
@@ -25,8 +25,4 @@ class StringUtility {
         }
     }
 
-}
-
-
-class MarkdownUtility {
 }

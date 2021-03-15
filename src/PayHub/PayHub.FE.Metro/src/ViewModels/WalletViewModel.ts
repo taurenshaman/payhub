@@ -1,9 +1,11 @@
-﻿/// <reference path="./AccountViewModelBase.ts" />
-//import { ViewModelBase } from './ViewModelBase';
+﻿import Vue from 'vue';
+import {DataService} from '../Tools';
+import {UIHelper, InputUtility} from '../Tools';
+import { AccountViewModelBase } from './AccountViewModelBase';
 
 "use strict";
 
-class WalletViewModel extends AccountViewModelBase {
+export class WalletViewModel extends AccountViewModelBase {
     constructor() {
         super();
 
@@ -33,24 +35,24 @@ class WalletViewModel extends AccountViewModelBase {
                 autoGenerateQrcode: true
             },
             methods: {
-                addAccount: function (index) {
+                addAccount: function (index: number) {
                     const currency = this.currencies[index];
                     this.theCurrency = currency;
                     this.accountName = currency.name + "(" + currency.unit + ")";
                     this.accountAddress = "";
                     UIHelper.ShowCharm("charmEditAccount");
                 },
-                editAccount: function (index) {
+                editAccount: function (index: number) {
                     const account = this.accounts[index];
-                    this.theCurrency = _.find(ctx.currencies, i => i.id === account.currencyId);
+                    this.theCurrency = ctx.currencies.find(i => i.id === account.currencyId);
                     this.accountName = account.name;
                     this.accountAddress = account.account;
                     UIHelper.ShowCharm("charmEditAccount");
                 },
-                toggleCard: function (index) {
+                toggleCard: function (index: number) {
                     $('#card_' + index).toggleClass('active');
                 },
-                getIconInfo: function(index) {
+                getIconInfo: function(index: number) {
                     const account = ctx.accounts[index];
                     return "<span class='"+ account.theCurrency.icon + "'></span>";
                 }
@@ -63,8 +65,8 @@ class WalletViewModel extends AccountViewModelBase {
     }
 
     updateCurrenciesStatus(){
-        _.forEach(this.currencies, coin => {
-            const index = _.findIndex(this.accounts, account => account.currencyId === coin.id);
+        this.currencies.forEach(coin => {
+            const index = this.accounts.findIndex(account => account.currencyId === coin.id);
             coin.added = (index >= 0);
             coin.statusColor = index < 0 ? "cyan" : "green";
         });

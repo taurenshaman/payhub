@@ -1,12 +1,14 @@
-﻿/// <reference path="./ViewModelBase.ts" />
-//import { ViewModelBase } from './ViewModelBase';
+﻿import { Currency, CurrencyCandidates } from '../Models';
+import {DataService} from '../Tools';
+import Vue from 'vue';
+import { ViewModelBase } from './ViewModelBase';
 
 "use strict";
 
-class CurrencyManagerViewModel extends ViewModelBase {
-    app;
+export class CurrencyManagerViewModel extends ViewModelBase {
+    app: any;
 
-    currencies;
+    currencies: Array<Currency>;
 
     constructor() {
         super();
@@ -27,9 +29,9 @@ class CurrencyManagerViewModel extends ViewModelBase {
     initVue() {
         const ctx = this;
         const data =_.concat(CurrencyCandidates.Data.cryptoCoins, CurrencyCandidates.Data.legalTenders);
-        _.forEach(data, coin => {
+        _.forEach(data, (coin: any) => {
             coin.icon = "cc " + coin.unit;
-            const index = _.findIndex(ctx.currencies, cur => cur.id === coin.id);
+            const index = ctx.currencies.findIndex(cur => cur.id === coin.id);
             coin.supported = (index >= 0);
             coin.statusColor = index < 0 ? "cyan" : "green";
         });
@@ -40,7 +42,7 @@ class CurrencyManagerViewModel extends ViewModelBase {
                 accounts: data
             },
             methods: {
-                supportCurrency: function (index) {
+                supportCurrency: function (index: number) {
                     //ctx.copyAccount(index);
                 },
                 // toggleCard: function (index) {

@@ -2,23 +2,41 @@
   "name": "payhub",
   "version": "1.0.0",
   "description": "Lib focused on payment\r ============================",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
-  "author": "jerin@chuci.info",
-  "license": "MIT",
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-terser": "^2.0.1",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "gulp-uglify": "^3.0.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.1.2",
+    "html-webpack-plugin": "^5.3.1",
     "ini": "^2.0.0",
-    "typescript": "^4.2.3"
+    "style-loader": "^2.0.0",
+    "ts-loader": "^8.0.18",
+    "typescript": "^4.2.3",
+    "webpack": "^5.25.1",
+    "webpack-cli": "^4.5.0",
+    "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "yargs-parser": "^20.2.7"
+    "axios": "^0.21.1",
+    "lodash": "^4.17.21",
+    "vue": "^2.6.12"
+  },
+  "keywords": [
+    "block chain",
+    "payhub",
+    "payment",
+    "cache",
+    "change",
+    "crypto coin",
+    "crypto currency"
+  ],
+  "author": "Jerin Lee",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taurenshaman/payhub.git"
   }
 }

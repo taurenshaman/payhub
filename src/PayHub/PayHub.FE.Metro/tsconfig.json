@@ -1,16 +1,12 @@
-﻿{
-  "compileOnSave": true,
-  "compilerOptions": {
-    "target": "es2017",
-    "module": "amd",
-    "jsx": "react",
-    "moduleResolution": "classic",
-    //"experimentalDecorators": true,
-    "importHelpers": true,
-    "declaration": false,
-    "noImplicitAny": false,
-    "outFile": "./js/payhub.js",
-    "sourceMap": true,
-    "removeComments": true
-  }
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "target": "ES2017",
+        "jsx": "react",
+        "allowJs": true
+    }
 }

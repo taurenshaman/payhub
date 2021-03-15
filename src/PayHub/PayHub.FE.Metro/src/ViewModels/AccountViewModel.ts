@@ -1,9 +1,10 @@
-﻿/// <reference path="./AccountViewModelBase.ts" />
-//import { ViewModelBase } from './ViewModelBase';
+﻿import {DataService, InputUtility} from '../Tools';
+import Vue from 'vue';
+import { AccountViewModelBase } from './AccountViewModelBase';
 
 "use strict";
 
-class AccountViewModel extends AccountViewModelBase {
+export class AccountViewModel extends AccountViewModelBase {
     constructor() {
         super();
     }
@@ -26,17 +27,17 @@ class AccountViewModel extends AccountViewModelBase {
                 accounts: ctx.accounts
             },
             methods: {
-                copyAccount: function (index) {
+                copyAccount: function (index: number) {
                     ctx.copyAccount(index);
                 },
-                submitTransaction: function (index) {
+                submitTransaction: function (index: number) {
                     const account = ctx.accounts[index];
                     //
                 },
-                toggleCard: function (index) {
+                toggleCard: function (index: number) {
                     $('#card_' + index).toggleClass('active');
                 },
-                getIconInfo: function(index) {
+                getIconInfo: function(index: number) {
                     const account = ctx.accounts[index];
                     return "<span class='"+ account.theCurrency.icon + "'></span>";
                 }
@@ -48,7 +49,7 @@ class AccountViewModel extends AccountViewModelBase {
         });
     }
 
-    copyAccount(index) {
+    copyAccount(index: number) {
         const ele = document.getElementById("taAccount_" + index) as HTMLTextAreaElement;
         ele.select();
 

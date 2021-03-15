@@ -1,6 +1,9 @@
 ﻿"use strict";
 
-class DataService {
+import NetUtility from "./NetUtility";
+import { UIHelper } from "./UIHelper";
+
+export class DataService {
     static ApiPrefix = "/api/v0/";
     static Api_Account_ListAll = DataService.ApiPrefix + "account/all";
     static Api_Account_Save = DataService.ApiPrefix + "account/save";
@@ -8,7 +11,7 @@ class DataService {
     static Api_Currency_ListAll = DataService.ApiPrefix + "currency/all";
     
 
-    query(uri, queryData, callback, httpMethod = "GET") {
+    query(uri: string, queryData: any, callback: Function, httpMethod = "GET") {
         const activityDialog = Metro.activity.open({
             type: "cycle"
         });
@@ -41,12 +44,12 @@ class DataService {
         });
     }
 
-    async getAsync(url, ajaxData) {
+    async getAsync(url: string, ajaxData: any) {
         const activityDialog = Metro.activity.open({
             type: "cycle"
         });
 
-        const response = await http<any>(
+        const response = await NetUtility.http<any>(
             new Request(url, {
                 method: "get",
                 //body: ajaxData
@@ -58,12 +61,12 @@ class DataService {
         return response;
     }
 
-    async postAsync(url, ajaxData) {
+    async postAsync(url: string, ajaxData: any) {
         const activityDialog = Metro.activity.open({
             type: "cycle"
         });
 
-        const response = await http<any>(
+        const response = await NetUtility.http<any>(
             new Request(url, {
                 method: "post",
                 body: ajaxData

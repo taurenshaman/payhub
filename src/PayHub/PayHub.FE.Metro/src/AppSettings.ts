@@ -1,6 +1,6 @@
 "use strict";
 
-class AppSettings{
+export default class AppSettings{
     /**
      * Default unit of the local money, legal tender.
      * CNY/USD/HKD/GBP/EUR/JPY/RUB/KRW/...
