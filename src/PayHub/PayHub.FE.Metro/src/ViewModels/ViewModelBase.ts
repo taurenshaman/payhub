@@ -1,9 +1,8 @@
 ﻿"use strict";
-
 import { DataService } from "../Tools";
 
 export class ViewModelBase {
-    app: Vue;
+    app: any;
     api: DataService;
 
     constructor() {

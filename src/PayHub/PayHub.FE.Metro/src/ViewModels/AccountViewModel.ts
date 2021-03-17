@@ -1,5 +1,5 @@
 ﻿import {DataService, InputUtility} from '../Tools';
-import Vue from 'vue';
+import { createApp } from "vue";
 import { AccountViewModelBase } from './AccountViewModelBase';
 
 "use strict";
@@ -20,11 +20,11 @@ export class AccountViewModel extends AccountViewModelBase {
 
     initVue() {
         const ctx = this;
-
-        this.app = new Vue({
-            el: '#app',
-            data: {
-                accounts: ctx.accounts
+        const vueSettings = {
+            data(){
+                return {
+                    accounts: ctx.accounts
+                };
             },
             methods: {
                 copyAccount: function (index: number) {
@@ -46,7 +46,8 @@ export class AccountViewModel extends AccountViewModelBase {
                 Metro.init();
                 ctx.afterMetroReady();
             }
-        });
+        };
+        this.app = createApp(vueSettings).mount('#app');
     }
 
     copyAccount(index: number) {

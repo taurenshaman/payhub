@@ -1,4 +1,4 @@
-﻿import Vue from 'vue';
+﻿import { createApp } from "vue";
 import {DataService} from '../Tools';
 import {UIHelper, InputUtility} from '../Tools';
 import { AccountViewModelBase } from './AccountViewModelBase';
@@ -23,16 +23,17 @@ export class WalletViewModel extends AccountViewModelBase {
 
     initVue() {
         const ctx = this;
-        this.app = new Vue({
-            el: '#app',
-            data: {
-                accounts: this.accounts,
-                currencies: this.currencies,
-                // account
-                theCurrency: {},
-                accountName: "",
-                accountAddress: "",
-                autoGenerateQrcode: true
+        const vueSettings = {
+            data(){
+                return {
+                    accounts: this.accounts,
+                    currencies: this.currencies,
+                    // account
+                    theCurrency: {},
+                    accountName: "",
+                    accountAddress: "",
+                    autoGenerateQrcode: true
+                };
             },
             methods: {
                 addAccount: function (index: number) {
@@ -61,7 +62,8 @@ export class WalletViewModel extends AccountViewModelBase {
                 Metro.init();
                 ctx.afterMetroReady();
             }
-        });
+        };
+        this.app = createApp(vueSettings).mount('#app');
     }
 
     updateCurrenciesStatus(){

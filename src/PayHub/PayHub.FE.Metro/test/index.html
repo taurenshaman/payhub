@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cryptocoins-icons@2.9.0/webfont/cryptocoins.css" />
 	<script type="text/javascript">
 		const pageData = {
-			username: "payhub",
-			nickname: "PayHub",
-			avatar: "https://robohash.org/payhub.png",
+			username: "taurenshaman",
+			nickname: "堆烟·雷云纹",
+			avatar: "https://robohash.org/taurenshaman.png",
 			accounts: [
 				{
 					name: "Bitcoin for PayHub",
@@ -189,62 +189,11 @@
 	<script src="https://unpkg.com/vue@next"></script>
 	
     <script src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
-	<script src="../dist/payhub.js?v=202103151835"></script>
+	<script src="../dist/payhub.js?v=202103171403"></script>
     
 	<script type="text/javascript">
-		var vueApp;
-		const UIHelper = PayHub.Tools.UIHelper;
-
-		function afterMetroReady() {
-			for (let i = 0; i < pageData.accounts.length; i++) {
-				const account = pageData.accounts[i];
-				// mouse enter/leave: flip-card > front(0)/back(1) > card
-				const cardDiv = document.getElementById("card_" + i);
-				const frontCard = cardDiv.children[0].children[0];
-				const backCard = cardDiv.children[1].children[0];
-				cardDiv.addEventListener('mouseenter', e => {
-					frontCard.classList.add("shadow-1");
-					backCard.classList.add("shadow-1");
-				});
-				cardDiv.addEventListener('mouseleave', e => {
-					frontCard.classList.remove("shadow-1");
-					backCard.classList.remove("shadow-1");
-				});
-				// qrcode
-				if(account.qrcode && account.qrcode.length > 4)
-					continue;
-				UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
-			}
-		}
-		
-		function init() {
-			console.log("init()...");
-			_.forEach(pageData.accounts, a => {
-				a.iconInfo = "<span class='cc " + a.theCurrency.unit + "'></span>";
-			});
-
-			const vueSettings = {
-				data(){
-					return pageData;
-				},
-				methods: {
-					copyAccount: function (index) {
-						const ele = document.getElementById("taAccount_" + index);
-						ele.select();
-
-						InputUtility.copyToClipboard();
-					},
-					toggleCard: function (index) {
-						$('#card_' + index).toggleClass('active');
-					}
-				},
-				mounted: function () {
-					console.log("vue mounted.");
-					Metro.init();
-					afterMetroReady();
-				}
-			};
-			vueApp = Vue.createApp(vueSettings).mount('#app');
+		function init(){
+			const vm = new PayHub.ViewModels.SinglePageViewModel("app", pageData);
 		}
 		
 		document.addEventListener("DOMContentLoaded", function(event) {

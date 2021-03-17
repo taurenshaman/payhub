@@ -1,6 +1,6 @@
 ﻿import { Currency, CurrencyCandidates } from '../Models';
 import {DataService} from '../Tools';
-import Vue from 'vue';
+import { createApp } from "vue";
 import { ViewModelBase } from './ViewModelBase';
 
 "use strict";
@@ -36,10 +36,11 @@ export class CurrencyManagerViewModel extends ViewModelBase {
             coin.statusColor = index < 0 ? "cyan" : "green";
         });
         
-        this.app = new Vue({
-            el: '#app',
-            data: {
-                accounts: data
+        const vueSettings = {
+            data(){
+                return {
+                    accounts: data
+                };
             },
             methods: {
                 supportCurrency: function (index: number) {
@@ -53,7 +54,8 @@ export class CurrencyManagerViewModel extends ViewModelBase {
                 Metro.init();
                 ctx.afterMetroReady();
             }
-        });
+        };
+        this.app = createApp(vueSettings).mount('#app');
     }
 
     // copyAccount(index) {
