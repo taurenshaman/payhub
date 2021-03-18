@@ -2,9 +2,11 @@ import { InputUtility, UIHelper } from "../Tools";
 import { ViewModelBase } from "./ViewModelBase";
 //import { PWCoreBank } from "../Impl/CKBBank";
 import { createApp } from "vue";
+import { KeyperingBank, requestAuth } from "../Impl";
 
 export class SinglePageViewModel extends ViewModelBase {
     bank: any;//PWCoreBank;
+    keyperingBank: any;
     data: any;
 
     constructor(eleId: string, data: any){
@@ -22,10 +24,17 @@ export class SinglePageViewModel extends ViewModelBase {
         const vueSettings = {
             data(){
                 return {
-                    username: "payhub",
-                    nickname: "PayHub",
-                    avatar: "https://robohash.org/payhub.png",
-                    accounts: ctx.data.accounts
+                    // 主人信息
+                    username: ctx.data.username,
+                    nickname: ctx.data.nickname,
+                    avatar: ctx.data.avatar,
+                    accounts: ctx.data.accounts,
+                    // 访客信息
+                    visitorName: "n/a",
+                    visitorAvatar: "https://robohash.org/payhub.png",
+                    visitorAddress: "n/a",
+                    visitorCapacity: 0,
+                    visitorFree: 0
                 };
             },
             methods: {
@@ -74,8 +83,8 @@ export class SinglePageViewModel extends ViewModelBase {
         //     type: "cycle"
         // });
         // PWCoreBank
-        // this.bank = new PWCoreBank();
-        // this.bank.init()
+        // vm.bank = new PWCoreBank();
+        // vm.bank.init()
         //     .then(() =>{
         //         console.log("PWCoreBank is ready.");
         //     })
@@ -85,7 +94,31 @@ export class SinglePageViewModel extends ViewModelBase {
         //     .finally(() =>{
         //         Metro.activity.close(activityDialog);
         //     });
-        //
+        vm.keyperingBank = new KeyperingBank();
+        vm.tryLoad().then(() =>{});
     }
+
+    async tryLoad() {
+        const r = await this.keyperingBank.load();
+        console.log(r);
+        console.log(this.keyperingBank.account);
+        if(r && this.keyperingBank.account){
+            const addr = this.keyperingBank.account.address;
+            this.app.visitorName = "You";
+            this.app.visitorAvatar = `https://robohash.org/${addr}.png`;
+            this.app.visitorAddress = addr;
+            this.app.visitorCapacity = this.keyperingBank.capacity;
+            this.app.visitorFree = this.keyperingBank.free;
+        }
+    }
+
+    async connectKeypering(){
+        await this.keyperingBank.connect();
+        await this.tryLoad();
+    }
+
+    // connectKeypering(){
+    //     this.connectKeyperingAsync().then(()=>{});
+    // }
 
 }

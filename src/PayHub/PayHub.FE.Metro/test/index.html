@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="metro4:init" content="false">
-    <title>PayHub</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/css/metro-all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cryptocoins-icons@2.9.0/webfont/cryptocoins.css" />
+	<title>PayHub</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/css/metro-all.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cryptocoins-icons@2.9.0/webfont/cryptocoins.css" />
 	<script type="text/javascript">
 		const pageData = {
 			username: "taurenshaman",
@@ -83,18 +84,27 @@
 
 <body>
 	<header data-role="appbar" data-expand-point="md" style="position: static;">
-		<a href="https://github.com/taurenshaman/payhub" class="brand no-hover order-1"><span class="mif-bitcoin mif-3x mr-3"></span> PayHub</a>
+		<a href="https://github.com/taurenshaman/payhub" class="brand no-hover order-1"><span
+				class="mif-bitcoin mif-3x mr-3"></span> PayHub</a>
 		<ul class="app-bar-menu order-2 order-md-3">
+			<li>
+				<a class="dropdown-toggle"><span class="mif-link"></span> Connect</a>
+				<ul class="d-menu" data-role="dropdown">
+					<li disabled><a href="#">PW (ETH/CKB)</a></li>
+					<li><a onclick="vm.connectKeypering();">Keypering (CKB)</a></li>
+				</ul>
+			</li>
 		</ul>
 
 		<div class="app-bar-container ml-auto order-3 order-md-4">
-			<a class="app-bar-item" href="https://github.com/taurenshaman/payhub"><span class="mif-github mif-2x"></span></a>
+			<a class="app-bar-item" href="https://github.com/taurenshaman/payhub"><span
+					class="mif-github mif-2x"></span></a>
 		</div>
 	</header>
 
 	<div id="app" class="container grid" style="min-height: 600px;">
 		<div class="row">
-			<div class="d-flex flex-justify-center w-100">
+			<div class="d-flex flex-justify-between w-100">
 				<div class="social-box" style="width: 400px;">
 					<div class="header bg-orange fg-white">
 						<img id="avator" class="avatar bg-light" :src="avatar">
@@ -107,12 +117,31 @@
 							<div>@taurenshaman</div>
 						</li>
 						<li>
-							<div class="text-bold"><a href="https://www.buymeacoffee.com/taurenshaman">BuyMeACoffee</a></div>
+							<div class="text-bold"><a href="https://www.buymeacoffee.com/taurenshaman">BuyMeACoffee</a>
+							</div>
 							<div>@taurenshaman</div>
 						</li>
 						<li>
 							<div class="text-bold"><a href="https://www.patreon.com/taurenshaman">Patreon</a></div>
 							<div>@taurenshaman</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="skill-box" style="width: 400px;">
+					<div class="header bg-green fg-white">
+						<img class="avatar bg-light" :src="visitorAvatar" :title="visitorAddress">
+						<div class="title" :title="visitorAddress">{{visitorName}}</div>
+						<div class="subtitle text-ellipsis" :title="visitorAddress">{{visitorAddress}}</div>
+					</div>
+					<ul class="skills">
+						<li>
+							<span>Capacity</span>
+							<span class="badge bg-cyan fg-white">{{visitorCapacity}}</span>
+						</li>
+						<li>
+							<span>Free</span>
+							<span class="badge bg-green fg-white">{{visitorFree}}</span>
 						</li>
 					</ul>
 				</div>
@@ -124,21 +153,19 @@
 		<div class="row mt-3 mb-3">
 			<div class="d-flex flex-justify-center flex-wrap w-100 h-100">
 				<div v-for="(item, index) in accounts" :key="item.uri" :id="'card_' + index"
-					 class="flip-card effect-on-active"
-					 style="width: 300px; height: 380px;">
+					class="flip-card effect-on-active" style="width: 300px; height: 380px;">
 					<div class="front">
 						<div class="card">
 							<div class="card-header bg-cyan fg-white">
-								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}}
+								({{item.theCurrency.unit}})
 							</div>
 							<div class="card-content p-2 text-center" style="height: 210px;">
 								<h2 class="text-center fg-gray">{{item.name}}</h2>
 								<textarea :id="'taAccount_' + index" style="height: 100px;" readonly
-										  data-role="textarea"
-										  data-clear-button="false"
-										  data-auto-size="false"
-										  v-if="item.account && item.account.length > 0"
-										  v-bind:data-prepend="item.iconInfo" v-on:focus="copyAccount(index)">{{item.account}}</textarea>
+									data-role="textarea" data-clear-button="false" data-auto-size="false"
+									v-if="item.account && item.account.length > 0" v-bind:data-prepend="item.iconInfo"
+									v-on:focus="copyAccount(index)">{{item.account}}</textarea>
 							</div>
 							<div class="card-footer">
 								<button class="flat-button mif-copy info" title="Copy"
@@ -152,11 +179,14 @@
 					<div class="back">
 						<div class="card">
 							<div class="card-header bg-cyan fg-white">
-								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}} ({{item.theCurrency.unit}})
+								<span :class="'icon mif-2x cc ' + item.theCurrency.unit"></span> {{item.name}}
+								({{item.theCurrency.unit}})
 							</div>
 							<div class="card-content d-flex p-2 flex-justify-center flex-align-center">
-								<img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto" :src="item.qrcode" />
-								<div v-else :id="'qrcode_' + index" style="width: 200px; height: 200px; overflow-y: auto">
+								<img v-if="item.qrcode" style="width: 200px; height: 200px; overflow-y: auto"
+									:src="item.qrcode" />
+								<div v-else :id="'qrcode_' + index"
+									style="width: 200px; height: 200px; overflow-y: auto">
 								</div>
 							</div>
 							<div class="card-footer flex-justify-center">
@@ -171,34 +201,93 @@
 
 	</div>
 
-    <footer class="text-muted">
-        <div class="container grid">
-            <div class="row mt-3 mb-3">
-                <hr class="w-100" />
-            </div>
-            <div class="row mt-3 mb-3">
-                &copy; 2020 - PayHub
-            </div>
-        </div>
-    </footer>
-	
+	<div id="charmTransfer" class="border bd-default p-1 bg-white fg-black w-75 h-100"
+		style="max-width: 500px;" data-role="charms" data-position="left">
+		<div class="grid w-100">
+			<div class="row p-1">
+				<h3>Transfer/h3>
+			</div>
+			<!--language-->
+			<div class="row p-1 d-flex flex-align-center">
+				<span class="mif-language"></span>
+				<span class="va-middle text-center ml-2 mr-2">@Common.Resources.Resources.Language
+					(@Lore.Web.Resources.Resources.Optional)</span>
+				<div style="width: 220px;">
+					<select id="literalLanguage" v-model="literalLanguage" data-role="select">
+						@Html.Partial( "_Resource_Options_Language", new ViewDataDictionary { { "moreLanguages", true }
+						} )
+					</select>
+				</div>
+			</div>
+			<!--value-->
+			<div class="row p-1">
+				<input id="literalTitle" type="text" placeholder="Press ENTER to add" data-role="input"
+					data-prepend="@Lore.Web.Resources.Resources.Title" data-cls-prepend="bg-cyan fg-light"
+					data-cls-input="text-bold bg-light fg-cyan text-center" v-model="literalValue"
+					v-on:keyup.enter="addLiteral">
+			</div>
+			<div class="row p-1 flex-justify-center">
+				<button class="button info cycle small outline" v-on:click="addLiteral()"
+					v-bind:disabled="literalValue.length === 0">
+					<span class="mif-checkmark"></span>
+				</button>
+			</div>
+			<!--view-->
+			<div class="row">
+				<ul class="step-list w-100 m-1" style="height: 400px; margin: 0; overflow: scroll;">
+					<li class="step-list-item ml-10" v-for="(item, index) in @domainKey" :key="'literal_' + index">
+						<h5 style="overflow: hidden;" :title="item.value">{{item.value}}</h5>
+						<p class="w-100">
+							<span class="ml-3 text-secondary fg-gray"
+								v-if="item.language.length > 0">@@{{item.language}}</span><br />
+						<div class="text-center flex-justify-center">
+							<button class="button info cycle mini outline"
+								v-on:click="editLiteral('@domainKey',index)"><span class="mif-pencil"></span></button>
+							<button class="button alert cycle mini outline ml-2"
+								v-on:click="removeLiteral('@domainKey',index)"><span class="mif-cross"></span></button>
+						</div>
+						</p>
+					</li>
+				</ul>
+			</div>
+			<div class="row p-3 flex-justify-center">
+				<button class="button info cycle outline"
+					onclick="UIHelper.HideCharm('charmEdit_LiteralsEditor');"><span class="mif-cross"></span></button>
+			</div>
+		</div>
+	</div>
+
+	<footer class="text-muted">
+		<div class="container grid">
+			<div class="row mt-3 mb-3">
+				<hr class="w-100" />
+			</div>
+			<div class="row mt-3 mb-3">
+				&copy; 2020 - PayHub
+			</div>
+		</div>
+	</footer>
+
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/js/metro.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/js/metro.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script> -->
 	<script src="https://unpkg.com/vue@next"></script>
-	
-    <script src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
-	<script src="../dist/payhub.js?v=202103171403"></script>
-    
+
+	<script
+		src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
+	<script src="../dist/payhub.js?v=202103181125"></script>
+
 	<script type="text/javascript">
-		function init(){
-			const vm = new PayHub.ViewModels.SinglePageViewModel("app", pageData);
+		var vm;
+		function init() {
+			vm = new PayHub.ViewModels.SinglePageViewModel("app", pageData);
 		}
-		
-		document.addEventListener("DOMContentLoaded", function(event) {
-		   setTimeout(init, 1000);
+
+		document.addEventListener("DOMContentLoaded", function (event) {
+			setTimeout(init, 1000);
 		});
 	</script>
 </body>
+
 </html>
