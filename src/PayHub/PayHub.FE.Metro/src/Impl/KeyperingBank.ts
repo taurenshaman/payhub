@@ -15,6 +15,8 @@ export class KeyperingBank{
     loading = false;
     tokenAmount = "0";
 
+    ckbBalance = 0;
+
     constructor(){}
 
     async connect(){

@@ -90,7 +90,14 @@
 			<li>
 				<a class="dropdown-toggle"><span class="mif-link"></span> Connect</a>
 				<ul class="d-menu" data-role="dropdown">
-					<li disabled><a href="#">PW (ETH/CKB)</a></li>
+					<li>
+						<a href="#" class="dropdown-toggle">Portal Wallet</a>
+						<ul class="d-menu" data-role="dropdown">
+							<li><a onclick="vm.connectPW('ETH');"><span class="cc ETH"></span> ETH</a></li>
+							<li disabled><a onclick="vm.connectPW('EOS');"><span class="cc EOS"></span> EOS</a></li>
+							<li disabled><a onclick="vm.connectPW('TRX');"><span class="cc TRX"></span> Tron</a></li>
+						</ul>
+					</li>
 					<li><a onclick="vm.connectKeypering();">Keypering (CKB)</a></li>
 				</ul>
 			</li>
@@ -130,11 +137,15 @@
 
 				<div class="skill-box" style="width: 400px;">
 					<div class="header bg-green fg-white">
-						<img class="avatar bg-light" :src="visitorAvatar" :title="visitorAddress">
-						<div class="title" :title="visitorAddress">{{visitorName}}</div>
-						<div class="subtitle text-ellipsis" :title="visitorAddress">{{visitorAddress}}</div>
+						<img class="avatar bg-light" :src="visitorAvatar" title="visitorOriginalAddress">
+						<div class="title text-ellipsis" :title="'Original: ' + visitorOriginalAddress">{{visitorOriginalAddress}}</div>
+						<div class="subtitle text-ellipsis" :title="'CKB: ' + visitorCKBAddress">{{visitorCKBAddress}}</div>
 					</div>
 					<ul class="skills">
+						<li>
+							<span>CKB Balance</span>
+							<span class="badge bg-cyan fg-white">{{visitorCKBBalance}}</span>
+						</li>
 						<li>
 							<span>Capacity</span>
 							<span class="badge bg-cyan fg-white">{{visitorCapacity}}</span>
@@ -171,7 +182,7 @@
 								<button class="flat-button mif-copy info" title="Copy"
 									v-if="item.account && item.account.length > 0"
 									v-on:click="copyAccount(index)"></button>
-								<button class="flat-button mif-upload success" title="Submit a transaction"
+								<button class="flat-button mif-loop primary" title="Transfer"
 									v-if="item.account && item.account.length > 0 && item.supportTransfer"
 									v-on:click="transfer(index)"></button>
 								<button class="flat-button mif-qrcode" v-on:click="toggleCard(index)"></button>
@@ -203,7 +214,7 @@
 
 	</div>
 
-	<div id="charmTransfer" class="border bd-default p-1 bg-white fg-black w-75 h-100"
+	<div id="charmTransferByKeypering" class="border bd-default p-1 bg-white fg-black w-75 h-100"
 		style="max-width: 500px;" data-role="charms" data-position="left">
 		<div class="grid w-100">
 			<div class="row p-1">
@@ -231,7 +242,34 @@
 			</div> -->
 			<div class="row p-3 flex-justify-center">
 				<button class="button info cycle outline mr-4" title="Transfer" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
-				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransfer');"><span class="mif-cross"></span></button>
+				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransferByKeypering');"><span class="mif-cross"></span></button>
+			</div>
+		</div>
+	</div>
+
+	<div id="charmTransferByPW" class="border bd-default p-1 bg-white fg-black w-75 h-100"
+		style="max-width: 500px;" data-role="charms" data-position="left">
+		<div class="grid w-100">
+			<!-- <div class="row p-1">
+				<h3>Transfer: {{coinName}}</h3>
+				<span class="small fg-gray">{{coinUnit}}</small>
+			</div>
+			<div class="row p-1">
+				<input type="text" placeholder="receiver address" data-role="input"
+					data-prepend="Receiver" data-cls-prepend="bg-cyan fg-light"
+					data-cls-input="text-bold bg-light fg-cyan text-center"
+					v-model="form.toAddress">
+			</div>
+			<div class="row p-1">
+				<input type="number" placeholder="amount" data-role="input"
+					data-prepend="Amount" data-cls-prepend="bg-cyan fg-light"
+					data-cls-input="text-bold bg-light fg-cyan text-center"
+					v-model="form.transferCount">
+				<span>Aailable: {{ currentCapicity }}</span>
+			</div> -->
+			<div class="row p-3 flex-justify-center">
+				<button class="button info cycle outline mr-4" title="Transfer" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
+				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransferByKeypering');"><span class="mif-cross"></span></button>
 			</div>
 		</div>
 	</div>
@@ -251,9 +289,16 @@
 	<script src="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/js/metro.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 	<script src="https://unpkg.com/vue@next"></script>
-	<script
-		src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
-	<script src="../dist/payhub.js?v=202103190856"></script>
+	<script src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
+	<!--web3 modal-->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3modal@1.9.3/dist/index.min.js"></script>
+	<!-- <script type="text/javascript" src="https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js"></script> -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.4.0/dist/umd/index.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fortmatic@2.2.1/dist/fortmatic.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@toruslabs/torus-embed@1.9.12/dist/torus.umd.min.js"></script>
+	
+	<script src="../dist/payhub.js?v=202103191851"></script>
 
 	<script type="text/javascript">
 		var UIHelper = PayHub.Tools.UIHelper;

@@ -9,7 +9,7 @@ export class KeyperingTransferViewModel extends ViewModelBase {
     charmId: string;
     worker: KeyperingBank;
 
-    constructor(worker: KeyperingBank, eleId = "charmTransfer") {
+    constructor(worker: KeyperingBank, eleId = "charmTransferByKeypering") {
         super();
         this.charmId = eleId;
         this.worker = worker;

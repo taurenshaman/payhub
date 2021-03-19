@@ -1,6 +1,6 @@
 ﻿import { Currency, CurrencyCandidates } from '../Models';
 import {DataService} from '../Tools';
-import { createApp } from "vue";
+//import { createApp } from "vue";
 import { ViewModelBase } from './ViewModelBase';
 
 "use strict";
@@ -55,7 +55,7 @@ export class CurrencyManagerViewModel extends ViewModelBase {
                 ctx.afterMetroReady();
             }
         };
-        this.app = createApp(vueSettings).mount('#app');
+        this.app = Vue.createApp(vueSettings).mount('#app');
     }
 
     // copyAccount(index) {

@@ -1,6 +1,6 @@
 "use strict";
 
-//import PWCore from './core';
+//var Buffer = require('buffer/').Buffer;
 
 import * as core from './Core';
 // export {core};

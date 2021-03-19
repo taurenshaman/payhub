@@ -1,5 +1,5 @@
 ﻿import {DataService, InputUtility} from '../Tools';
-import { createApp } from "vue";
+//import { createApp } from "vue";
 import { AccountViewModelBase } from './AccountViewModelBase';
 
 "use strict";
@@ -47,7 +47,7 @@ export class AccountViewModel extends AccountViewModelBase {
                 ctx.afterMetroReady();
             }
         };
-        this.app = createApp(vueSettings).mount('#app');
+        this.app = Vue.createApp(vueSettings).mount('#app');
     }
 
     copyAccount(index: number) {

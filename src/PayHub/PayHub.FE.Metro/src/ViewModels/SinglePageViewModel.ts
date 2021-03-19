@@ -2,14 +2,20 @@ import { InputUtility, UIHelper } from "../Tools";
 import { ViewModelBase } from "./ViewModelBase";
 //import { PWCoreBank } from "../Impl/CKBBank";
 //import { createApp } from "vue";
-import { KeyperingBank } from "../Impl";
+import { KeyperingBank, PWCoreBank } from "../Impl";
 import { KeyperingTransferViewModel } from "../Components";
+import { PWTransferViewModel } from "../Components/PWTransferViewModel";
 
 export class SinglePageViewModel extends ViewModelBase {
-    //readonly CharmId_charmTransfer = "charmTransfer";
-    bank: any;//PWCoreBank;
+    readonly ProviderName_Keypering = "keypering";
+    readonly ProviderName_PW = "pw";
+    provider: string;
+
+    pwBank: PWCoreBank;
+    vmPWTransfer: PWTransferViewModel;
+
     keyperingBank: KeyperingBank;
-    vmTransfer: KeyperingTransferViewModel;
+    vmKeyperingTransfer: KeyperingTransferViewModel;
 
     constructor(eleId: string, data: any){
         super();
@@ -32,11 +38,12 @@ export class SinglePageViewModel extends ViewModelBase {
                     avatar: data.avatar,
                     accounts: data.accounts,
                     // 访客信息
-                    visitorName: "n/a",
+                    visitorOriginalAddress: "n/a",
                     visitorAvatar: "https://robohash.org/payhub.png",
-                    visitorAddress: "n/a",
+                    visitorCKBAddress: "n/a",
                     visitorCapacity: 0,
-                    visitorFree: 0
+                    visitorFree: 0,
+                    visitorCKBBalance: 0
                 };
             },
             methods: {
@@ -46,9 +53,9 @@ export class SinglePageViewModel extends ViewModelBase {
 
                     InputUtility.copyToClipboard();
                 },
-                transfer: function(index: number) {
+                transfer: async function(index: number) {
                     const receiver = this.accounts[index];
-                    ctx.vmTransfer.show(ctx.vmTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
+                    await ctx.transfer(ctx, receiver);
                 },
                 toggleCard: function (index: number) {
                     $('#card_' + index).toggleClass('active');
@@ -85,40 +92,20 @@ export class SinglePageViewModel extends ViewModelBase {
         }
     }
 
-    async tryLoadKeyperingInfo(): Promise<boolean> {
-        const r = await this.keyperingBank.load();
-        if(r && this.keyperingBank.account){
-            const addr = this.keyperingBank.account.address;
-            this.app.visitorName = "You";
-            this.app.visitorAvatar = `https://robohash.org/${addr}.png`;
-            this.app.visitorAddress = addr;
-            this.app.visitorCapacity = this.keyperingBank.capacity;
-            this.app.visitorFree = this.keyperingBank.free;
-
-            const index = this.app.accounts.findIndex((a: any) => a.theCurrency.unit.toLocaleLowerCase() === "ckb" );
-            if(index >= 0){
-                this.app.accounts[index].supportTransfer = true;
-            }
+    async connectPW(coin: string = "ETH"){
+        try{
+            if(!this.pwBank)
+                this.pwBank = new PWCoreBank();
+            if(!this.vmPWTransfer)
+                this.vmPWTransfer = new PWTransferViewModel(this.pwBank);
+            await this.pwBank.connect(coin);
+            await this.pwBank.load();
+            this.updateVisitorInfo(this.pwBank.visitorAddress.addressString, this.pwBank.ckbAddress, this.pwBank.ckbBalance.toString());
+            this.provider = this.ProviderName_PW;
         }
-        return r;
+        finally{
+        }
     }
-
-    // async connectPW(){
-    //     const activityDialog = Metro.activity.open({
-    //         type: "cycle"
-    //     });
-    //     this.bank = new PWCoreBank();
-    //     this.bank.init()
-    //         .then(() =>{
-    //             console.log("PWCoreBank is ready.");
-    //         })
-    //         .catch(() => {
-    //             console.log("Some error occured when PWCoreBank is initializing!");
-    //         })
-    //         .finally(() =>{
-    //             Metro.activity.close(activityDialog);
-    //         });
-    // }
 
     async connectKeypering(){
         const activityDialog = Metro.activity.open({
@@ -127,16 +114,48 @@ export class SinglePageViewModel extends ViewModelBase {
         try{
             if(!this.keyperingBank)
                 this.keyperingBank = new KeyperingBank();
-            if(!this.vmTransfer)
-                this.vmTransfer = new KeyperingTransferViewModel(this.keyperingBank);
+            if(!this.vmKeyperingTransfer)
+                this.vmKeyperingTransfer = new KeyperingTransferViewModel(this.keyperingBank);
             const hasData = await this.tryLoadKeyperingInfo();
             if(!hasData) {
                 await this.keyperingBank.connect();
                 await this.tryLoadKeyperingInfo();
             }
+            this.provider = this.ProviderName_Keypering;
         }
         finally{
             Metro.activity.close(activityDialog);
+        }
+    }
+
+    updateVisitorInfo(originalAddress: string, ckbAddress: string, ckbBalance: any){
+        this.app.visitorOriginalAddress = originalAddress;
+        this.app.visitorAvatar = `https://robohash.org/${originalAddress}.png`;
+        this.app.visitorCKBAddress = ckbAddress;
+        this.app.visitorCKBBalance = ckbBalance;
+
+        const index = this.app.accounts.findIndex((a: any) => a.theCurrency.unit.toLocaleLowerCase() === "ckb" );
+        if(index >= 0){
+            this.app.accounts[index].supportTransfer = true;
+        }
+    }
+
+    async tryLoadKeyperingInfo(): Promise<boolean> {
+        const r = await this.keyperingBank.load();
+        if(r && this.keyperingBank.account){
+            this.updateVisitorInfo(this.keyperingBank.account.address, this.keyperingBank.account.address, this.keyperingBank.ckbBalance);
+            this.app.visitorCapacity = this.keyperingBank.capacity;
+            this.app.visitorFree = this.keyperingBank.free;
+        }
+        return r;
+    }
+
+    async transfer(vm: SinglePageViewModel, receiver: any){
+        if(vm.provider === vm.ProviderName_Keypering){
+            await vm.vmKeyperingTransfer.show(vm.vmKeyperingTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
+        }
+        else if(vm.provider === vm.ProviderName_PW){
+            //await vm.vmPWTransfer.show(vm.vmPWTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿import { createApp } from "vue";
+﻿//import { createApp } from "vue";
 import {DataService} from '../Tools';
 import {UIHelper, InputUtility} from '../Tools';
 import { AccountViewModelBase } from './AccountViewModelBase';
@@ -63,7 +63,7 @@ export class WalletViewModel extends AccountViewModelBase {
                 ctx.afterMetroReady();
             }
         };
-        this.app = createApp(vueSettings).mount('#app');
+        this.app = Vue.createApp(vueSettings).mount('#app');
     }
 
     updateCurrenciesStatus(){

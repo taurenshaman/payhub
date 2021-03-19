@@ -2,6 +2,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.ts',
@@ -38,13 +39,27 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
+    // hack for errors when import pw-core
+    fallback: {
+      buffer: require.resolve("buffer/"),
+      crypto: require.resolve("crypto-browserify"),
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      os: require.resolve("os-browserify/browser"),
+      stream: require.resolve("stream-browserify"),
+      url: require.resolve("url/")
+    }
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Production',
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.MY_ENV': JSON.stringify(process.env.MY_ENV)
+    })
   ],
   externals: {
     lodash: {
