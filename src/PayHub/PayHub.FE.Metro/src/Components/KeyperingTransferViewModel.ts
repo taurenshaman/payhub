@@ -52,7 +52,7 @@ export class KeyperingTransferViewModel extends ViewModelBase {
             // setup: async function(){
             // },
             mounted: async function () {
-                await ctx.check(ctx);
+                //await ctx.check(ctx);
             }
         };
         this.app = Vue.createApp(vueSettings).mount("#" + this.charmId);
@@ -112,7 +112,9 @@ export class KeyperingTransferViewModel extends ViewModelBase {
 
     async transferSUDT(){}
 
-    show(vm: KeyperingTransferViewModel, coinName: string, coinUnit: string, receiverAddress: string){
+    async show(vm: KeyperingTransferViewModel, coinName: string, coinUnit: string, receiverAddress: string, checkCKB: boolean = true, checkSUDT: boolean = true){
+        await vm.check(vm, checkCKB, checkSUDT);
+
         UIHelper.ShowCharm(vm.charmId);
 
         vm.app.coinName = coinName;

@@ -8,7 +8,7 @@ import { KeyperingTransferViewModel } from "../Components";
 export class SinglePageViewModel extends ViewModelBase {
     //readonly CharmId_charmTransfer = "charmTransfer";
     bank: any;//PWCoreBank;
-    keyperingBank: any;
+    keyperingBank: KeyperingBank;
     vmTransfer: KeyperingTransferViewModel;
 
     constructor(eleId: string, data: any){
@@ -57,7 +57,7 @@ export class SinglePageViewModel extends ViewModelBase {
             mounted: async function () {
                 Metro.init();
                 ctx.initCards(this.accounts);
-                ctx.initBanks(ctx);
+                //ctx.initBanks(ctx);
             }
         };
         this.app = Vue.createApp(vueSettings).mount('#' + eleId);
@@ -85,32 +85,8 @@ export class SinglePageViewModel extends ViewModelBase {
         }
     }
 
-    async initBanks(vm: SinglePageViewModel){
-        // coin bank
-        // const activityDialog = Metro.activity.open({
-        //     type: "cycle"
-        // });
-        // PWCoreBank
-        // vm.bank = new PWCoreBank();
-        // vm.bank.init()
-        //     .then(() =>{
-        //         console.log("PWCoreBank is ready.");
-        //     })
-        //     .catch(() => {
-        //         console.log("Some error occured when PWCoreBank is initializing!");
-        //     })
-        //     .finally(() =>{
-        //         Metro.activity.close(activityDialog);
-        //     });
-        vm.keyperingBank = new KeyperingBank();
-        vm.tryLoad().then(() =>{});
-        vm.vmTransfer = new KeyperingTransferViewModel(vm.keyperingBank);
-    }
-
-    async tryLoad() {
+    async tryLoadKeyperingInfo(): Promise<boolean> {
         const r = await this.keyperingBank.load();
-        console.log(r);
-        console.log(this.keyperingBank.account);
         if(r && this.keyperingBank.account){
             const addr = this.keyperingBank.account.address;
             this.app.visitorName = "You";
@@ -124,11 +100,44 @@ export class SinglePageViewModel extends ViewModelBase {
                 this.app.accounts[index].supportTransfer = true;
             }
         }
+        return r;
     }
 
+    // async connectPW(){
+    //     const activityDialog = Metro.activity.open({
+    //         type: "cycle"
+    //     });
+    //     this.bank = new PWCoreBank();
+    //     this.bank.init()
+    //         .then(() =>{
+    //             console.log("PWCoreBank is ready.");
+    //         })
+    //         .catch(() => {
+    //             console.log("Some error occured when PWCoreBank is initializing!");
+    //         })
+    //         .finally(() =>{
+    //             Metro.activity.close(activityDialog);
+    //         });
+    // }
+
     async connectKeypering(){
-        await this.keyperingBank.connect();
-        await this.tryLoad();
+        const activityDialog = Metro.activity.open({
+            type: "cycle"
+        });
+        try{
+            if(!this.keyperingBank)
+                this.keyperingBank = new KeyperingBank();
+            if(!this.vmTransfer)
+                this.vmTransfer = new KeyperingTransferViewModel(this.keyperingBank);
+            const hasData = await this.tryLoadKeyperingInfo();
+            if(!hasData) {
+                await this.keyperingBank.connect();
+                await this.tryLoadKeyperingInfo();
+            }
+        }
+        finally{
+            Metro.activity.close(activityDialog);
+        }
     }
 
 }
