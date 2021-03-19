@@ -1,6 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   entry: './src/index.ts',
@@ -12,8 +13,13 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
+      {
         test: /\.css$/,
         use: [
+          'vue-style-loader',
           'style-loader',
           'css-loader'
         ]
@@ -38,6 +44,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Production',
     }),
+    new VueLoaderPlugin()
   ],
   externals: {
     lodash: {
@@ -47,6 +54,7 @@ module.exports = {
       root: '_',
     },
     vue: { commonjs: "vue", commonjs2: "vue",amd: 'vue', root: ['Vue'] },
+    //"vue": "_.createApp",
     // "react-dom": { commonjs: "react-dom", commonjs2: "react-dom", amd: 'react-dom', root: ['ReactDom'] },
     // "react-redux": { commonjs: "react-redux", commonjs2: "react-redux", amd:"react-redux"},
     // redux: { commonjs: "redux", commonjs2: "redux", amd: 'redux'},

@@ -171,7 +171,9 @@
 								<button class="flat-button mif-copy info" title="Copy"
 									v-if="item.account && item.account.length > 0"
 									v-on:click="copyAccount(index)"></button>
-								<!-- <button class="flat-button mif-upload success" title="Submit a transaction" v-on:click="submitTransaction(index)"></button> -->
+								<button class="flat-button mif-upload success" title="Submit a transaction"
+									v-if="item.account && item.account.length > 0 && item.supportTransfer"
+									v-on:click="transfer(index)"></button>
 								<button class="flat-button mif-qrcode" v-on:click="toggleCard(index)"></button>
 							</div>
 						</div>
@@ -205,54 +207,31 @@
 		style="max-width: 500px;" data-role="charms" data-position="left">
 		<div class="grid w-100">
 			<div class="row p-1">
-				<h3>Transfer/h3>
+				<h3>Transfer: {{coinName}}</h3>
+				<span class="small fg-gray">{{coinUnit}}</small>
 			</div>
-			<!--language-->
-			<div class="row p-1 d-flex flex-align-center">
-				<span class="mif-language"></span>
-				<span class="va-middle text-center ml-2 mr-2">@Common.Resources.Resources.Language
-					(@Lore.Web.Resources.Resources.Optional)</span>
-				<div style="width: 220px;">
-					<select id="literalLanguage" v-model="literalLanguage" data-role="select">
-						@Html.Partial( "_Resource_Options_Language", new ViewDataDictionary { { "moreLanguages", true }
-						} )
-					</select>
-				</div>
-			</div>
-			<!--value-->
+			<!---->
 			<div class="row p-1">
-				<input id="literalTitle" type="text" placeholder="Press ENTER to add" data-role="input"
-					data-prepend="@Lore.Web.Resources.Resources.Title" data-cls-prepend="bg-cyan fg-light"
-					data-cls-input="text-bold bg-light fg-cyan text-center" v-model="literalValue"
-					v-on:keyup.enter="addLiteral">
+				<input type="text" placeholder="receiver address" data-role="input"
+					data-prepend="Receiver" data-cls-prepend="bg-cyan fg-light"
+					data-cls-input="text-bold bg-light fg-cyan text-center"
+					v-model="form.toAddress">
 			</div>
+			<div class="row p-1">
+				<input type="number" placeholder="amount" data-role="input"
+					data-prepend="Amount" data-cls-prepend="bg-cyan fg-light"
+					data-cls-input="text-bold bg-light fg-cyan text-center"
+					v-model="form.transferCount">
+				<span>Aailable: {{ currentCapicity }}</span><!--currentSudtCount-->
+			</div>
+			<!-- sudt
 			<div class="row p-1 flex-justify-center">
-				<button class="button info cycle small outline" v-on:click="addLiteral()"
-					v-bind:disabled="literalValue.length === 0">
-					<span class="mif-checkmark"></span>
-				</button>
-			</div>
-			<!--view-->
-			<div class="row">
-				<ul class="step-list w-100 m-1" style="height: 400px; margin: 0; overflow: scroll;">
-					<li class="step-list-item ml-10" v-for="(item, index) in @domainKey" :key="'literal_' + index">
-						<h5 style="overflow: hidden;" :title="item.value">{{item.value}}</h5>
-						<p class="w-100">
-							<span class="ml-3 text-secondary fg-gray"
-								v-if="item.language.length > 0">@@{{item.language}}</span><br />
-						<div class="text-center flex-justify-center">
-							<button class="button info cycle mini outline"
-								v-on:click="editLiteral('@domainKey',index)"><span class="mif-pencil"></span></button>
-							<button class="button alert cycle mini outline ml-2"
-								v-on:click="removeLiteral('@domainKey',index)"><span class="mif-cross"></span></button>
-						</div>
-						</p>
-					</li>
-				</ul>
-			</div>
+				<input type="checkbox" data-role="checkbox" data-caption="provide CKB"
+					v-model:checked="form.selfProvide" />
+			</div> -->
 			<div class="row p-3 flex-justify-center">
-				<button class="button info cycle outline"
-					onclick="UIHelper.HideCharm('charmEdit_LiteralsEditor');"><span class="mif-cross"></span></button>
+				<button class="button info cycle outline mr-4" title="Transfer" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
+				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransfer');"><span class="mif-cross"></span></button>
 			</div>
 		</div>
 	</div>
@@ -271,14 +250,13 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/metro4@4.4.2/build/js/metro.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
-	<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script> -->
 	<script src="https://unpkg.com/vue@next"></script>
-
 	<script
 		src="https://cdn.jsdelivr.net/gh/taurenshaman/payhub/src/PayHub/PayHub.Web/wwwroot/js/qrcode.min.js"></script>
-	<script src="../dist/payhub.js?v=202103181125"></script>
+	<script src="../dist/payhub.js?v=202103190856"></script>
 
 	<script type="text/javascript">
+		var UIHelper = PayHub.Tools.UIHelper;
 		var vm;
 		function init() {
 			vm = new PayHub.ViewModels.SinglePageViewModel("app", pageData);

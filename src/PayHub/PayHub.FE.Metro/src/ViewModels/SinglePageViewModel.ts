@@ -1,23 +1,25 @@
 import { InputUtility, UIHelper } from "../Tools";
 import { ViewModelBase } from "./ViewModelBase";
 //import { PWCoreBank } from "../Impl/CKBBank";
-import { createApp } from "vue";
-import { KeyperingBank, requestAuth } from "../Impl";
+//import { createApp } from "vue";
+import { KeyperingBank } from "../Impl";
+import { KeyperingTransferViewModel } from "../Components";
 
 export class SinglePageViewModel extends ViewModelBase {
+    //readonly CharmId_charmTransfer = "charmTransfer";
     bank: any;//PWCoreBank;
     keyperingBank: any;
-    data: any;
+    vmTransfer: KeyperingTransferViewModel;
 
     constructor(eleId: string, data: any){
         super();
-        this.data = data;
-        this.init(eleId);
+        this.init(eleId, data);
     }
 
-    init(eleId: string){
-        this.data.accounts.forEach((a: any) => {
+    init(eleId: string, data: any){
+        data.accounts.forEach((a: any) => {
             a.iconInfo = "<span class='cc " + a.theCurrency.unit + "'></span>";
+            a.supportTransfer = false;
         });
 
         const ctx = this;
@@ -25,10 +27,10 @@ export class SinglePageViewModel extends ViewModelBase {
             data(){
                 return {
                     // 主人信息
-                    username: ctx.data.username,
-                    nickname: ctx.data.nickname,
-                    avatar: ctx.data.avatar,
-                    accounts: ctx.data.accounts,
+                    username: data.username,
+                    nickname: data.nickname,
+                    avatar: data.avatar,
+                    accounts: data.accounts,
                     // 访客信息
                     visitorName: "n/a",
                     visitorAvatar: "https://robohash.org/payhub.png",
@@ -44,23 +46,26 @@ export class SinglePageViewModel extends ViewModelBase {
 
                     InputUtility.copyToClipboard();
                 },
+                transfer: function(index: number) {
+                    const receiver = this.accounts[index];
+                    ctx.vmTransfer.show(ctx.vmTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
+                },
                 toggleCard: function (index: number) {
                     $('#card_' + index).toggleClass('active');
                 }
             },
-            mounted: function () {
-                console.log("vue mounted.");
+            mounted: async function () {
                 Metro.init();
-                ctx.afterMetroReady(ctx);
+                ctx.initCards(this.accounts);
+                ctx.initBanks(ctx);
             }
         };
-        this.app = createApp(vueSettings).mount('#' + eleId);
+        this.app = Vue.createApp(vueSettings).mount('#' + eleId);
     }
 
-    afterMetroReady(vm: SinglePageViewModel){
-        const pageData = vm.data;
-        for (let i = 0; i < pageData.accounts.length; i++) {
-            const account = pageData.accounts[i];
+    initCards(accounts: any){
+        for (let i = 0; i < accounts.length; i++) {
+            const account = accounts[i];
             // mouse enter/leave: flip-card > front(0)/back(1) > card
             const cardDiv = document.getElementById("card_" + i);
             const frontCard = cardDiv.children[0].children[0];
@@ -78,6 +83,9 @@ export class SinglePageViewModel extends ViewModelBase {
                 continue;
             UIHelper.CreateQRCode("qrcode_" + i, account.account, 200);
         }
+    }
+
+    async initBanks(vm: SinglePageViewModel){
         // coin bank
         // const activityDialog = Metro.activity.open({
         //     type: "cycle"
@@ -96,6 +104,7 @@ export class SinglePageViewModel extends ViewModelBase {
         //     });
         vm.keyperingBank = new KeyperingBank();
         vm.tryLoad().then(() =>{});
+        vm.vmTransfer = new KeyperingTransferViewModel(vm.keyperingBank);
     }
 
     async tryLoad() {
@@ -109,6 +118,11 @@ export class SinglePageViewModel extends ViewModelBase {
             this.app.visitorAddress = addr;
             this.app.visitorCapacity = this.keyperingBank.capacity;
             this.app.visitorFree = this.keyperingBank.free;
+
+            const index = this.app.accounts.findIndex((a: any) => a.theCurrency.unit.toLocaleLowerCase() === "ckb" );
+            if(index >= 0){
+                this.app.accounts[index].supportTransfer = true;
+            }
         }
     }
 
@@ -116,9 +130,5 @@ export class SinglePageViewModel extends ViewModelBase {
         await this.keyperingBank.connect();
         await this.tryLoad();
     }
-
-    // connectKeypering(){
-    //     this.connectKeyperingAsync().then(()=>{});
-    // }
 
 }

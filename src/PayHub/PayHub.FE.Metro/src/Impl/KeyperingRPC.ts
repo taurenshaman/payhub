@@ -59,7 +59,7 @@ export const getCells = async (scriptType: 'lock' | 'type', script: UnderscoreSc
     body
   });
   const data = await response.json();
-  return data.result.objects;
+  return data.result ? data.result.objects : [];
 }
 
 export const getTransaction = async (tx: string): Promise<Record<string, Record<string, unknown>> | undefined> => {
