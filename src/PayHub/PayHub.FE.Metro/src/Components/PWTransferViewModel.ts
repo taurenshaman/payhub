@@ -12,12 +12,7 @@ export class PWTransferViewModel extends ViewModelBase {
     charmId: string;
     bank: PWCoreBank;
 
-    // providerName: string;
-    // provider: Web3ModalProvider;
-    // pw: PWCore;
-    // web3Modal: Web3Modal;
     visitorAddress: Address;
-    //visitorBalance: Amount;
 
     constructor(bank: PWCoreBank, visitorAddress: Address, eleId = "charmTransferByPW") {
         super();
@@ -33,7 +28,6 @@ export class PWTransferViewModel extends ViewModelBase {
         const vueSettings = {
             data() {
                 return {
-                    //visitorBalance: "",
                     address: this.visitorAddress,
                     balance: Amount.ZERO,
                     pwbtcBalance: Amount.ZERO,

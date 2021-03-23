@@ -262,8 +262,8 @@ export class PWCoreBank {
           walletconnect: {
             package: WalletConnectProvider,
             options: {
-              // infuraId: process.env.REACT_APP_INFURA_ID
-              infuraId: "89a648e271d54224ba4827d348cbaa54",
+              // You can create a account at https://infura.io/ to use your own id
+              infuraId: "5a41e14da5ef449fbf12157f6736178f",
             },
           },
         //   fortmatic: {
@@ -338,7 +338,7 @@ export class PWCoreBank {
             type: "cycle"
         });
         try{
-            this.worker = await new PWCore(PWCoreUtility.Node_Testnet_PW).init(
+            this.worker = await new PWCore(PWCoreUtility.Node_Mainnet).init(
                 this.provider,
                 new PwCollector(PWCoreUtility.Node_PW_API)
             );

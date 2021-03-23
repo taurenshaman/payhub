@@ -180,10 +180,10 @@
 									v-on:focus="copyAccount(index)">{{item.account}}</textarea>
 							</div>
 							<div class="card-footer">
-								<button class="flat-button mif-copy info" title="Copy"
+								<button class="flat-button mif-copy" title="Copy"
 									v-if="item.account && item.account.length > 0"
 									v-on:click="copyAccount(index)"></button>
-								<button class="flat-button mif-loop primary" title="Transfer"
+								<button class="flat-button mif-loop fg-cyan" title="Transfer"
 									v-if="item.account && item.account.length > 0 && item.supportTransfer"
 									v-on:click="transfer(index)"></button>
 								<button class="flat-button mif-qrcode" v-on:click="toggleCard(index)"></button>
