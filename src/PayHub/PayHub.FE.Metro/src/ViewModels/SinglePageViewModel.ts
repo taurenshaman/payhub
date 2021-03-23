@@ -5,6 +5,7 @@ import { ViewModelBase } from "./ViewModelBase";
 import { KeyperingBank, PWCoreBank } from "../Impl";
 import { KeyperingTransferViewModel } from "../Components";
 import { PWTransferViewModel } from "../Components/PWTransferViewModel";
+import PWCore from "@lay2/pw-core";
 
 export class SinglePageViewModel extends ViewModelBase {
     readonly ProviderName_Keypering = "keypering";
@@ -96,12 +97,12 @@ export class SinglePageViewModel extends ViewModelBase {
         try{
             if(!this.pwBank)
                 this.pwBank = new PWCoreBank();
-            if(!this.vmPWTransfer)
-                this.vmPWTransfer = new PWTransferViewModel(this.pwBank);
             await this.pwBank.connect(coin);
             await this.pwBank.load();
+
             this.updateVisitorInfo(this.pwBank.visitorAddress.addressString, this.pwBank.ckbAddress, this.pwBank.ckbBalance.toString());
             this.provider = this.ProviderName_PW;
+            this.vmPWTransfer = new PWTransferViewModel(this.pwBank, this.pwBank.visitorAddress );
         }
         finally{
         }
@@ -155,7 +156,7 @@ export class SinglePageViewModel extends ViewModelBase {
             await vm.vmKeyperingTransfer.show(vm.vmKeyperingTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
         }
         else if(vm.provider === vm.ProviderName_PW){
-            //await vm.vmPWTransfer.show(vm.vmPWTransfer, receiver.theCurrency.name, receiver.theCurrency.unit, receiver.account);
+            await vm.vmPWTransfer.show(vm.vmPWTransfer, receiver.account);
         }
     }
 

@@ -35,6 +35,7 @@
 				{
 					name: "Nervos CKB for PayHub",
 					account: "ckb1qyq2e4dgfga975npy8ete2vhfdw6te5ykmvq2ukf6a",
+					//account: "ckt1qyqxcgz6667tuefakpl2ae8s3n9nh8ygypksp8lf9s",
 					theCurrency: {
 						name: "Nervos CKB",
 						unit: "CKB"
@@ -136,8 +137,8 @@
 				</div>
 
 				<div class="skill-box" style="width: 400px;">
-					<div class="header bg-green fg-white">
-						<img class="avatar bg-light" :src="visitorAvatar" title="visitorOriginalAddress">
+					<div :class="visitorOriginalAddress === 'n/a' ? 'header fg-white bg-lightSteel' : 'header fg-white bg-green'">
+						<img class="avatar bg-light" :src="visitorAvatar" :title="visitorOriginalAddress">
 						<div class="title text-ellipsis" :title="'Original: ' + visitorOriginalAddress">{{visitorOriginalAddress}}</div>
 						<div class="subtitle text-ellipsis" :title="'CKB: ' + visitorCKBAddress">{{visitorCKBAddress}}</div>
 					</div>
@@ -250,26 +251,42 @@
 	<div id="charmTransferByPW" class="border bd-default p-1 bg-white fg-black w-75 h-100"
 		style="max-width: 500px;" data-role="charms" data-position="left">
 		<div class="grid w-100">
-			<!-- <div class="row p-1">
+			<div class="row p-1">
 				<h3>Transfer: {{coinName}}</h3>
 				<span class="small fg-gray">{{coinUnit}}</small>
 			</div>
 			<div class="row p-1">
-				<input type="text" placeholder="receiver address" data-role="input"
+				<input type="text" data-role="input"
 					data-prepend="Receiver" data-cls-prepend="bg-cyan fg-light"
-					data-cls-input="text-bold bg-light fg-cyan text-center"
-					v-model="form.toAddress">
+					data-cls-input="text-bold bg-light fg-cyan text-center" 
+					v-model="toAddressString">
+			</div>
+			<div class="row p-1">
+				<select data-role="select" v-bind:value="tokenName" v-on:change="tokenName = $event.target.value">
+					<option v-for="option in options" :value="option">
+						{{ option }}
+					  </option>
+				</select>
 			</div>
 			<div class="row p-1">
 				<input type="number" placeholder="amount" data-role="input"
 					data-prepend="Amount" data-cls-prepend="bg-cyan fg-light"
 					data-cls-input="text-bold bg-light fg-cyan text-center"
-					v-model="form.transferCount">
-				<span>Aailable: {{ currentCapicity }}</span>
-			</div> -->
+					v-model="amountValue">
+				<span>Aailable: {{ balanceString }}</span>
+			</div>
 			<div class="row p-3 flex-justify-center">
-				<button class="button info cycle outline mr-4" title="Transfer" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
-				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransferByKeypering');"><span class="mif-cross"></span></button>
+				<button class="button info cycle outline mr-4" title="Transfer" :disabled="transferBtnDisabled" v-on:click="transfer()">
+					<span class="mif-checkmark"></span>
+				</button>
+				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransferByPW');"><span class="mif-cross"></span></button>
+			</div>
+			<div class="row p-1">
+				<h3 class="fg-gray">Transactions:</span>
+			</div>
+			<div class="row p-1 scroll-y" style="height: 300px;">
+				<a v-for="tx in txs" :key="tx" :href="`https://explorer.nervos.org/aggron/transaction/${tx}`"
+					class="text-ellipsis" target="_blank"> {{tx}}</a>
 			</div>
 		</div>
 	</div>
@@ -298,7 +315,7 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fortmatic@2.2.1/dist/fortmatic.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@toruslabs/torus-embed@1.9.12/dist/torus.umd.min.js"></script>
 	
-	<script src="../dist/payhub.js?v=202103191851"></script>
+	<script src="../dist/payhub.js?v=20210323"></script>
 
 	<script type="text/javascript">
 		var UIHelper = PayHub.Tools.UIHelper;

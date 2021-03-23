@@ -229,19 +229,10 @@ export class PWCoreBank {
 
     providerName: string;
     provider: any = null;
-    pw: PWCore;
     web3Modal: any = null;
     visitorAddress: Address = null;
     balance = Amount.ZERO;
-    toAddressString = "";
     pwbtcBalance = Amount.ZERO;
-    tokenName: 'CKB';
-    options = ['CKB', 'PW-BTC'];
-    toAddress: Address = null;
-    minAmount = new Amount('61');
-    amountValue: 0;
-    amount = Amount.ZERO;
-    txs = [] as Array<any>;
 
     // ethAddress: string;
     ckbAddress: string;
@@ -335,12 +326,10 @@ export class PWCoreBank {
                 }
                 break;
             case 'EOS': 
-                //this.provider = new EosProvider(PWCoreUtility.EOS_NETWORK);
-                throw new Error('EosProvider: Not implemented.');
+                this.provider = new EosProvider(PWCoreUtility.EOS_NETWORK);
                 break;
             case 'TRON':
-                //this.provider = new TronProvider();
-                throw new Error('EosProvider: Not implemented.');
+                this.provider = new TronProvider();
                 break;
             default:
                 throw new Error('Unsupported Provider');
@@ -369,6 +358,34 @@ export class PWCoreBank {
         catch {
             return false;
         }
+    }
+
+    async transfer(bank: PWCoreBank, tokenName: string, toAddress: Address, amount: Amount): Promise<Array<any>>{
+      const activityDialog = Metro.activity.open({
+        type: "cycle"
+      });
+      try {
+        const txs = [];
+        let txHash;
+        if(tokenName === 'CKB'){
+          txHash = await bank.worker.send(toAddress, amount);
+        }
+        // else{
+        //   /**
+        //    when createAcp is true, pw-core will create a acp cell for receiver.
+        //    when createAcp is false, pw-core will not create acp cell for receiver. sudt will be transfered only if receiver already has acp cell.
+        //    */
+        //   const createAcp = true;
+        //   txHash = await this.pw.sendSUDT(new SUDT(PWBTC_ISSURER_LOCKHASH), toAddress, amount, createAcp);
+        // }
+        txs.unshift(txHash);
+        Metro.activity.close(activityDialog);
+        return txs;
+      } catch(err) {
+        Metro.activity.close(activityDialog);
+        UIHelper.ToastError("Error! Please view the console log.");
+        console.error('send tx error', err);
+      }
     }
 
     async transferCKBUsingEthAddress(targetAddress: string, amount: string, feeRate?: number, memo?: string): Promise<string>{
