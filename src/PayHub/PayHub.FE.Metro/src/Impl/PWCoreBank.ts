@@ -12,7 +12,8 @@ import PWCore, {
     Signer,
     SimpleBuilder,
     EthSigner,
-    DefaultSigner
+    DefaultSigner,
+    IndexerCollector
   } from '@lay2/pw-core';
 // import Web3 from "web3";
 // import Web3Modal from "web3modal";
@@ -28,10 +29,14 @@ const Torus = (window as any).Torus;
 import { UIHelper } from "../Tools";
 
 export class PWCoreUtility{
-    static readonly Node_Testnet_Aggron = "https://aggron.ckb.dev";
+    static readonly Node_Testnet_Aggron = "https://testnet.ckb.dev";
+    static readonly Node_Testnet_Aggron_IndexCollector = "https://testnet.ckb.dev/indexer";
+
     static readonly Node_Mainnet = "https://mainnet.ckb.dev";
-    static readonly Node_PW_API = "https://cellapitest.ckb.pw";
+    static readonly Node_Mainnet_IndexCollector = "https://mainnet.ckb.dev/indexer";
+    
     static readonly Node_Testnet_PW = "https://testnet.ckb.dev";
+    static readonly Node_PW_API_Test = "https://cellapitest.ckb.pw";
 
     static readonly EOS_NETWORK = {
         blockchain: 'eos',
@@ -231,12 +236,12 @@ export class PWCoreBank {
     provider: any = null;
     web3Modal: any = null;
     visitorAddress: Address = null;
-    balance = Amount.ZERO;
+    //balance = Amount.ZERO;
     pwbtcBalance = Amount.ZERO;
 
     // ethAddress: string;
     ckbAddress: string;
-    ckbBalance: Amount;
+    ckbBalance = Amount.ZERO;
 
     constructor(){
         this.init();
@@ -340,7 +345,7 @@ export class PWCoreBank {
         try{
             this.worker = await new PWCore(PWCoreUtility.Node_Mainnet).init(
                 this.provider,
-                new PwCollector(PWCoreUtility.Node_PW_API)
+                new IndexerCollector(PWCoreUtility.Node_Mainnet_IndexCollector)
             );
             this.visitorAddress = PWCore.provider.address;
             this.ckbAddress = this.visitorAddress.toCKBAddress();
@@ -355,7 +360,8 @@ export class PWCoreBank {
             this.ckbBalance = await PWCore.defaultCollector.getBalance(this.visitorAddress);
             return true;
         }
-        catch {
+        catch (error){
+            UIHelper.ToastError(error);
             return false;
         }
     }
