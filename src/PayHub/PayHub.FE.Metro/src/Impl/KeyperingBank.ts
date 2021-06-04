@@ -1,6 +1,6 @@
 import CKBComponents from '@nervosnetwork/ckb-sdk-core'
 import { KEYPERING_URL, SECP256K1_BLAKE160_CODE_HASH } from './NervosConstants'
-import { compareScript, underscoreScriptKey, getNetworkConst, calCapacityAmount, parseBigIntStringNumber } from'./NervosParsers'
+import { compareScript, underscoreScriptKey, getNetworkConst, calCapacityAmount, parseBigIntStringNumber } from './NervosParsers'
 import { UnderscoreScript, AccountList, UnderscoreCell, Account } from './NervosInterfaces';
 import { getCells, queryAddresses, requestAuth } from './KeyperingRPC';
 import { KeyperingUtility } from './KeyperingUtility';
@@ -8,7 +8,7 @@ import { UIHelper } from '../Tools';
 
 
 
-export class KeyperingBank{
+export class KeyperingBank {
     account: Account;
     free = "0";
     capacity = "0";
@@ -17,9 +17,15 @@ export class KeyperingBank{
 
     ckbBalance = 0;
 
-    constructor(){}
 
-    async connect(){
+    network: any = {
+        network: "n/a",
+        name: "n/a"
+    };
+
+    constructor() { }
+
+    async connect() {
         try {
             const req = await requestAuth("PayHub");
             window.localStorage.setItem(KeyperingUtility.Key_AuthToken, req.token);
@@ -31,14 +37,14 @@ export class KeyperingBank{
         }
     }
 
-    async load(): Promise<boolean>{
+    async load(): Promise<boolean> {
         const authToken = window.localStorage.getItem(KeyperingUtility.Key_AuthToken);
         if (!authToken) {
             UIHelper.ToastMessage("Keypering.noAuth");
             return false;
         }
         // load info by authToken
-        try{
+        try {
             const results: AccountList | undefined = await queryAddresses(authToken);
             if (results === undefined) {
                 UIHelper.ToastError("Keypering.noAddress");
@@ -48,7 +54,7 @@ export class KeyperingBank{
             const address = addresses.filter(
                 (address: Account) =>
                     address.lockScriptMeta.name === "Secp256k1"
-                );
+            );
             if (address.length === 0) {
                 UIHelper.ToastError("Keypering.no256k1Address");
                 return false;
@@ -77,7 +83,7 @@ export class KeyperingBank{
             UIHelper.ToastMessage("Keypering: success.auth");
             return true;
         }
-        catch(error){
+        catch (error) {
             UIHelper.ToastError(error);
             return false;
         }

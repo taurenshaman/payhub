@@ -83,7 +83,7 @@
 	</script>
 </head>
 
-<body>
+<body id="app">
 	<header data-role="appbar" data-expand-point="md" style="position: static;">
 		<a href="https://github.com/taurenshaman/payhub" class="brand no-hover order-1"><span
 				class="mif-bitcoin mif-3x mr-3"></span> PayHub</a>
@@ -105,12 +105,13 @@
 		</ul>
 
 		<div class="app-bar-container ml-auto order-3 order-md-4">
+			<span class="app-bar-item" title="Current Network">{{ckbNetwork.name}}</span>
 			<a class="app-bar-item" href="https://github.com/taurenshaman/payhub"><span
 					class="mif-github mif-2x"></span></a>
 		</div>
 	</header>
 
-	<div id="app" class="container grid" style="min-height: 600px;">
+	<div class="container grid" style="min-height: 600px;">
 		<div class="row">
 			<div class="d-flex flex-justify-between w-100">
 				<div class="social-box" style="width: 400px;">
@@ -159,9 +160,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="row mt-3 mb-3">
-			<hr class="w-100" />
+		<div class="row mt-3 mb-3 flex-justify-center remark info">
+			<!-- <span v-if="network" class="mr-3">{{network.name}}</span>
+			<span v-if="network" class="mr-3">+</span> -->
+			<span>Current Network: <b>{{ckbNetwork.name}}</b></span>
 		</div>
+		<!-- <div class="row mt-3 mb-3">
+			<hr class="w-100" />
+		</div> -->
 		<div class="row mt-3 mb-3">
 			<div class="d-flex flex-justify-center flex-wrap w-100 h-100">
 				<div v-for="(item, index) in accounts" :key="item.uri" :id="'card_' + index"
@@ -227,23 +233,33 @@
 				<input type="text" placeholder="receiver address" data-role="input"
 					data-prepend="Receiver" data-cls-prepend="bg-cyan fg-light"
 					data-cls-input="text-bold bg-light fg-cyan text-center"
-					v-model="form.toAddress">
+					v-model="toAddressString">
 			</div>
 			<div class="row p-1">
 				<input type="number" placeholder="amount" data-role="input"
 					data-prepend="Amount" data-cls-prepend="bg-cyan fg-light"
 					data-cls-input="text-bold bg-light fg-cyan text-center"
-					v-model="form.transferCount">
-				<span>Aailable: {{ currentCapicity }}</span><!--currentSudtCount-->
+					v-model="transferCount">
+				<span>Aailable: {{ balanceString }}</span><!--currentSudtCount-->
+			</div>
+			<div class="row p-1" v-if="fee && fee.length > 0">
+				<span class="fg-cyan">Fee: {{ fee }}</span>
 			</div>
 			<!-- sudt
 			<div class="row p-1 flex-justify-center">
 				<input type="checkbox" data-role="checkbox" data-caption="provide CKB"
 					v-model:checked="form.selfProvide" />
-			</div> -->
+			</div>  -->
 			<div class="row p-3 flex-justify-center">
-				<button class="button info cycle outline mr-4" title="Transfer" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
+				<button class="button info cycle outline mr-4" title="Transfer" :disabled="transferBtnDisabled" v-on:click="transfer()"><span class="mif-checkmark"></span></button>
 				<button class="button info cycle outline" onclick="UIHelper.HideCharm('charmTransferByKeypering');"><span class="mif-cross"></span></button>
+			</div>
+			<div class="row p-1">
+				<h3 class="fg-gray">Transactions:</span>
+			</div>
+			<div class="row p-1 scroll-y" style="height: 300px;">
+				<a v-for="tx in txs" :key="tx" :href="`https://explorer.nervos.org/aggron/transaction/${tx}`"
+					class="text-ellipsis" target="_blank"> {{tx}}</a>
 			</div>
 		</div>
 	</div>
@@ -315,7 +331,7 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fortmatic@2.2.1/dist/fortmatic.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@toruslabs/torus-embed@1.9.12/dist/torus.umd.min.js"></script>
 	
-	<script src="../dist/payhub.js?v=202103241032"></script>
+	<script src="../dist/payhub.js?v=20210510"></script>
 
 	<script type="text/javascript">
 		var UIHelper = PayHub.Tools.UIHelper;

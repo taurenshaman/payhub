@@ -6,4 +6,5 @@ export * from "./KeyperingRPC";
 export * from "./KeyperingUtility";
 export * from "./KeyperingBank";
 // pw-core
+export * from './PWCoreUtility';
 export * from './PWCoreBank';

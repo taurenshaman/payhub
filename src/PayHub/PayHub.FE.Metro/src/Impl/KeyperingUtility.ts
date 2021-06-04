@@ -1,7 +1,7 @@
 import { UIHelper } from "../Tools";
 import { getCells, getTransaction, queryAddresses } from "./KeyperingRPC";
 import { compareScript, underscoreScriptKey, getNetworkConst, parseSudtInfoData } from './NervosParsers'
-import { UnderscoreScript, UnderscoreCell } from './NervosInterfaces';
+import { UnderscoreScript, UnderscoreCell, Account } from './NervosInterfaces';
 
 export class KeyperingUtility{
     static readonly Key_AuthToken = "keypering.authToken";
@@ -41,6 +41,32 @@ export const getBiggestCapacityCell = async (lockScript: UnderscoreScript): Prom
         )[0];
 }
 
+export const groupCells = (cells: Array<UnderscoreCell>) => {
+    return {
+        emptyCells: cells.filter(cell => !cell.output_data || cell.output_data === '0x'),
+        filledCells: cells.filter(cell => cell.output_data !== '0x'),
+    }
+}
+
+export const getSummary = (cells: Array<UnderscoreCell>) => {
+    const inuse = cells
+      .filter(cell => cell.output_data !== '0x')
+      .map(cell => parseInt(cell.output.capacity))
+      .reduce((acc, curr) => acc + curr, 0)
+  
+    const free = cells
+      .filter(cell => cell.output_data === '0x')
+      .map(cell => parseInt(cell.output.capacity))
+      .reduce((acc, curr) => acc + curr, 0)
+  
+    const capacity = inuse + free
+    return {
+      inuse,
+      capacity,
+      free,
+    }
+  }
+
 export const showTransactionModal = async (tx: string): Promise<void> => {
     const txLink = getNetworkConst("EXPLORER_URL") + tx;
     const content = `<p><a href="${txLink}" target="_blank">View the transaction: ${tx}</a></p>`;
@@ -69,18 +95,22 @@ export const showTransactionModal = async (tx: string): Promise<void> => {
     );
 }
 
-export const isKeyperingConnected = async (): Promise<boolean> => {
+export const isKeyperingConnected = async (): Promise<Account> => {
     try {
-        const address = await queryAddresses(window.localStorage.getItem(KeyperingUtility.Key_AuthToken) || "");
-        if (address === undefined) {
-            UIHelper.ToastError("isKeyperingConnected: errors.noAddress");
-            return false;
-        } else {
-            return true;
+        const addresses = await (await queryAddresses(window.localStorage.getItem(KeyperingUtility.Key_AuthToken) || "")).addresses;
+        // if (address === undefined) {
+        //     UIHelper.ToastError("isKeyperingConnected: errors.noAddress");
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+        if (addresses && addresses.length > 0){
+            return addresses[0];
         }
+        return undefined;
     } catch (error) {
         UIHelper.ToastError(error.message);
-        return false;
+        return undefined;
     }
 }
 

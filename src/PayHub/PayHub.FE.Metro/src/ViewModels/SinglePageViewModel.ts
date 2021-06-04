@@ -44,7 +44,15 @@ export class SinglePageViewModel extends ViewModelBase {
                     visitorCKBAddress: "n/a",
                     visitorCapacity: 0,
                     visitorFree: 0,
-                    visitorCKBBalance: 0
+                    visitorCKBBalance: 0,
+                    network: {
+                        network: "n/a",
+                        name: "n/a"
+                    },
+                    ckbNetwork: {
+                        network: "n/a",
+                        name: "n/a"
+                    }
                 };
             },
             methods: {
@@ -102,6 +110,8 @@ export class SinglePageViewModel extends ViewModelBase {
 
             this.updateVisitorInfo(this.pwBank.visitorAddress.addressString, this.pwBank.ckbAddress, this.pwBank.ckbBalance.toString());
             this.provider = this.ProviderName_PW;
+            //this.app.network = this.pwBank.network;
+            this.app.ckbNetwork = this.pwBank.ckbNetwork;
             this.vmPWTransfer = new PWTransferViewModel(this.pwBank, this.pwBank.visitorAddress );
         }
         finally{
@@ -123,6 +133,8 @@ export class SinglePageViewModel extends ViewModelBase {
                 await this.tryLoadKeyperingInfo();
             }
             this.provider = this.ProviderName_Keypering;
+            //this.app.network = null;
+            this.app.ckbNetwork = this.keyperingBank.network;
         }
         finally{
             Metro.activity.close(activityDialog);

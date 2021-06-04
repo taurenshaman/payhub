@@ -1,6 +1,6 @@
 import CKBComponents from '@nervosnetwork/ckb-sdk-core'
 import { UIHelper } from '../Tools'
-import { KEYPERING_URL } from './NervosConstants'
+import { KEYPERING_URL, SECP256K1_BLAKE160_CODE_HASH } from './NervosConstants'
 import { getNetworkConst } from './NervosParsers'
 import { UnderscoreScript, AccountList, UnderscoreCell } from './NervosInterfaces'
 
@@ -34,6 +34,19 @@ export const queryAddresses = async (token: string): Promise<AccountList | undef
   });
   const data = await response.json();
   return data.result;
+}
+
+export const getCellsByLockArgs = async (scriptType: 'lock' | 'type', lockArgs: any): Promise<Array<UnderscoreCell> | []> => {
+  const script: UnderscoreScript = {
+    code_hash: SECP256K1_BLAKE160_CODE_HASH,
+    hash_type: 'type',
+    args: lockArgs,
+  };
+  if(!scriptType)
+    scriptType = 'lock';
+  
+  const data = await getCells(scriptType, script);
+  return data;
 }
 
 export const getCells = async (scriptType: 'lock' | 'type', script: UnderscoreScript): Promise<Array<UnderscoreCell> | []> => {
